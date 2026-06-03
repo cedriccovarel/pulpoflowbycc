@@ -1,0 +1,632 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pulpo by Cc</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app">
+    <header class="toolbar">
+      <div class="brand">
+        <div class="logo" title="Pulpo by Cc"><svg class="squid-logo" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 5 C42 5 48 14 45 25 C43 31 39 35 35 38 L35 56 L31 48 L27 56 L27 38 C23 35 19 31 17 25 C14 14 22 5 32 5 Z"/><path d="M18 25 C9 27 6 36 5 50 C10 40 15 36 22 35 Z"/><path d="M46 25 C55 27 58 36 59 50 C54 40 49 36 42 35 Z"/><path d="M25 34 C17 39 15 47 14 60 C19 50 23 44 29 41 Z"/><path d="M39 34 C47 39 49 47 50 60 C45 50 41 44 35 41 Z"/></svg></div>
+        <div>
+          <h1>Pulpo</h1>
+          <p>by Cc · cartographie de flux</p>
+        </div>
+      </div>
+
+      <section class="toolbar-group tools-group base-group">
+        <div class="section-title first">Base</div>
+        <div class="tool-palette" aria-label="Outils de base">
+          <div class="tool-icon" draggable="true" data-tool="box" title="Box / information">▣</div>
+          <div class="tool-icon" draggable="true" data-tool="panel" title="Panel / post-it">📝</div>
+          <div class="tool-icon" draggable="true" data-tool="freeText" title="Texte libre">T</div>
+          <div class="tool-icon" draggable="true" data-tool="table" title="Mini tableau">▦</div>
+          <div class="tool-icon" draggable="true" data-tool="slider" title="Slider numérique">↔</div>
+          <div class="tool-icon" draggable="true" data-tool="switch" title="Interrupteur Vrai / Faux">⏻</div>
+        </div>
+      </section>
+
+      <section class="toolbar-group tools-group math-group">
+        <div class="section-title">Mathématiques</div>
+        <div class="tool-palette" aria-label="Outils mathématiques">
+          <div class="tool-icon" draggable="true" data-tool="add" title="Addition">+</div>
+          <div class="tool-icon" draggable="true" data-tool="subtract" title="Soustraction">−</div>
+          <div class="tool-icon" draggable="true" data-tool="multiply" title="Multiplication">×</div>
+          <div class="tool-icon" draggable="true" data-tool="divide" title="Division">÷</div>
+          <div class="tool-icon" draggable="true" data-tool="formula" title="Formule personnalisée">ƒ</div>
+        </div>
+      </section>
+
+      <section class="toolbar-group tools-group source-external-group">
+        <div class="section-title">Source externe</div>
+        <div class="tool-palette" aria-label="Sources externes">
+          <div class="tool-icon" draggable="true" data-tool="pdf" title="Fichier joint">📎</div>
+          <div class="tool-icon" draggable="true" data-tool="link" title="Lien internet">🔗</div>
+          <div class="tool-icon" draggable="true" data-tool="milestone" title="Jalon">◆</div>
+          <div class="tool-icon import-excel-icon" id="excelImportBtn" draggable="false" title="Importer Excel / CSV et créer des box">▦</div>
+        </div>
+      </section>
+
+      <section class="toolbar-group project-group">
+        <div class="section-title">Projets</div>
+        <div class="project-controls icon-controls">
+          <button id="addProjectBtn" title="Ajouter un projet" aria-label="Ajouter un projet">＋</button>
+          <button id="renameProjectBtn" title="Renommer le projet actif" aria-label="Renommer le projet actif">✎</button>
+          <button id="duplicateProjectBtn" title="Dupliquer le projet actif dans un nouvel onglet" aria-label="Dupliquer le projet actif">⧉</button>
+          <button id="deleteProjectBtn" class="danger" title="Supprimer le projet actif" aria-label="Supprimer le projet actif">🗑</button>
+        </div>
+      </section>
+
+      <section class="toolbar-group">
+        <div class="section-title">Groupes</div>
+        <div class="toolbar-row icon-controls">
+          <button id="addGroupBtn" title="Grouper la sélection" aria-label="Grouper la sélection">⛓</button>
+          <button id="ungroupBtn" title="Dégrouper la sélection" aria-label="Dégrouper la sélection">⛓̸</button>
+        </div>
+      </section>
+
+      <section class="toolbar-group layout-group">
+        <div class="section-title">Mise en page</div>
+        <div class="grid2 align-grid icon-controls">
+          <button data-align="left" title="Aligner à gauche" aria-label="Aligner à gauche">⇤</button>
+          <button data-align="center" title="Centrer horizontalement" aria-label="Centrer horizontalement">↔</button>
+          <button data-align="right" title="Aligner à droite" aria-label="Aligner à droite">⇥</button>
+          <button data-align="top" title="Aligner en haut" aria-label="Aligner en haut">⇧</button>
+          <button data-align="middle" title="Centrer verticalement" aria-label="Centrer verticalement">↕</button>
+          <button data-align="bottom" title="Aligner en bas" aria-label="Aligner en bas">⇩</button>
+        </div>
+        <div class="toolbar-row distribute-row icon-controls">
+          <button id="sortBtn" title="Trier automatiquement les outils" aria-label="Trier automatiquement les outils">☷</button>
+          <button id="layoutFamilyBtn" title="Auto-layout par famille : Source → Information → Critère → Type → Outil/Calcul → Résultat" aria-label="Auto-layout par famille">🧭</button>
+          <button id="distributeHBtn" title="Distribuer horizontalement la sélection" aria-label="Distribuer horizontalement la sélection">⟷</button>
+          <button id="distributeVBtn" title="Distribuer verticalement la sélection" aria-label="Distribuer verticalement la sélection">↕</button>
+        </div>
+      </section>
+
+      <section class="toolbar-group file-group">
+        <div class="section-title">Sauvegarde</div>
+        <div class="toolbar-row icon-controls">
+          <button id="saveBtn" title="Sauvegarder dans le fichier choisi / remplacer le fichier existant" aria-label="Sauvegarder dans le fichier choisi">💾</button>
+          <button id="loadBtn" title="Charger l’ancienne sauvegarde navigateur" aria-label="Charger l’ancienne sauvegarde navigateur">📂</button>
+        </div>
+        <div class="toolbar-row icon-controls">
+          <button id="exportBtn" title="Exporter un fichier .json et choisir l’emplacement" aria-label="Exporter un fichier JSON">⬇</button>
+          <button id="importBtn" title="Importer un fichier .json" aria-label="Importer un fichier JSON">⬆</button>
+          <button id="exportExcelPathsBtn" title="Bêta : exporter les chemins de connexion vers Excel" aria-label="Exporter les chemins vers Excel">📊</button>
+          <button id="exportPdfBtn" title="Exporter en PDF" aria-label="Exporter en PDF" onclick="window.openPdfExportModal && window.openPdfExportModal(event)">📄</button>
+        </div>
+        <input id="importFileInput" type="file" accept="application/json,.json" hidden />
+        <input id="excelFileInput" type="file" accept=".xlsx,.xls,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,text/csv" hidden />
+        <input id="pdfFileInput" type="file" hidden />
+      </section>
+
+
+      <section class="toolbar-group view-group">
+        <div class="section-title">Lecture</div>
+        <div class="toolbar-row icon-controls mode-controls">
+          <button id="editModeBtn" title="Mode édition" aria-label="Mode édition">✏️</button>
+          <button id="readModeBtn" title="Mode lecture : masque les aides d’édition" aria-label="Mode lecture">👁</button>
+          <button id="auditModeBtn" title="Mode audit : met en avant les éléments à vérifier" aria-label="Mode audit">🔎</button>
+          <button id="planningModeBtn" title="Mode planning avec semaines en horizontal" aria-label="Mode planning">📅</button>
+          <button id="legendToggleBtn" title="Afficher / masquer la légende" aria-label="Afficher ou masquer la légende">ⓘ</button>
+        </div>
+      </section>
+
+      <section class="toolbar-group search-group">
+        <div class="section-title">Recherche</div>
+        <div class="search-bar">
+          <input id="flowSearchInput" type="search" placeholder="Rechercher un outil…" title="Recherche dans les noms, commentaires, textes, liens et fichiers" />
+          <button id="searchPrevBtn" title="Résultat précédent" aria-label="Résultat précédent">◀</button>
+          <button id="searchNextBtn" title="Résultat suivant" aria-label="Résultat suivant">▶</button>
+        </div>
+        <div id="searchCount" class="search-count">Aucune recherche</div>
+      </section>
+
+      <section class="toolbar-group isolate-group">
+        <div class="section-title">Vue groupe</div>
+        <div class="isolate-bar">
+          <select id="groupFocusSelect" title="Isoler un groupe par son nom"><option value="">Tous les groupes</option></select>
+          <button id="clearGroupFocusBtn" title="Revenir à la vue complète" aria-label="Revenir à la vue complète">↩</button>
+        </div>
+      </section>
+
+      <section class="toolbar-group clear-group">
+        <div class="section-title">Page</div>
+        <button id="clearBtn" class="danger" title="Vider le projet actif" aria-label="Vider le projet actif">🧹</button>
+      </section>
+
+      <div class="legacy-inspector" hidden>
+        <input id="nameInput" />
+        <input id="colorInput" type="color" value="#ffffff" />
+        <button id="addLeftPortBtn"></button>
+        <button id="addRightPortBtn"></button>
+        <button id="deleteBtn"></button>
+      </div>
+    </header>
+
+    <main class="workspace-wrap">
+      <div class="topbar">
+        <div id="projectTabs" class="project-tabs"></div>
+        <div class="topbar-right"><span id="status">Prêt</span><span class="tip">Glisser-déposer depuis la barre du haut · Molette = zoom/dézoom · double-clic molette = recentrer · clic droit maintenu = déplacer la vue</span></div>
+      </div>
+      <div id="workspace" class="workspace">
+        <div id="planningGrid" class="planning-grid" hidden></div>
+        <svg id="connections" class="connections"></svg>
+        <div id="canvas" class="canvas"></div>
+      </div>
+    </main>
+  </div>
+
+  <button id="aiBuildBtn" class="pulpo-ai-fab" type="button" title="Assistant IA Pulpo" aria-label="Assistant IA Pulpo" onclick="window.openPulpoAiChat && window.openPulpoAiChat(event)">
+    <svg viewBox="0 0 64 64" aria-hidden="true">
+      <path class="fab-pulpo-body" d="M32 6 C42 6 49 15 46 26 C44 32 40 36 36 39 L36 56 L32 49 L28 56 L28 39 C24 36 20 32 18 26 C15 15 22 6 32 6 Z"/>
+      <path class="fab-pulpo-body" d="M19 25 C10 28 7 37 6 50 C11 40 16 36 22 35 Z"/>
+      <path class="fab-pulpo-body" d="M45 25 C54 28 57 37 58 50 C53 40 48 36 42 35 Z"/>
+      <circle class="fab-pulpo-eye" cx="26" cy="24" r="4"/>
+      <circle class="fab-pulpo-eye" cx="38" cy="24" r="4"/>
+      <circle class="fab-pulpo-dot" cx="26" cy="24" r="1.4"/>
+      <circle class="fab-pulpo-dot" cx="38" cy="24" r="1.4"/>
+      <ellipse class="fab-pulpo-mouth" cx="32" cy="31" rx="3.6" ry="2.4"/>
+    </svg>
+    <span>IA</span>
+  </button>
+
+  <template id="nodeTemplate">
+    <div class="node">
+      <div class="node-header">
+        <span class="node-title"></span>
+        <span class="node-kind"></span>
+      </div>
+      <div class="node-body">
+        <div class="ports left"></div>
+        <div class="node-content"></div>
+        <div class="ports right"></div>
+      </div>
+    </div>
+  </template>
+
+  <div id="contextMenu" class="context-menu" hidden>
+    <div class="context-title">Réglages</div>
+    <label>Nom
+      <input id="ctxName" type="text" />
+    </label>
+    <label>Couleur
+      <input id="ctxColor" type="color" />
+    </label>
+    <label>Famille
+      <select id="ctxFamily">
+        <option value="information">Information à récupérer</option>
+        <option value="source">Source de l’information</option>
+        <option value="datatype">Type de donnée</option>
+        <option value="criterion">Critère</option>
+        <option value="result">Résultat</option>
+        <option value="tool">Outil</option>
+      </select>
+    </label>
+    <div class="recent-colors-block">
+      <div class="mini-label">Couleurs standards</div>
+      <div id="recentColors" class="recent-colors"></div>
+    </div>
+    <button id="ctxCopyStyle" class="copy-style-btn" title="Copier la mise en forme de la sélection, puis clic droit sur un autre outil pour l’appliquer">🎨 Copier mise en forme</button>
+    <button id="ctxResetStyle" class="reset-style-btn" title="Réinitialiser la couleur, la taille du texte et les dimensions de la sélection">↺ Réinitialiser mise en forme</button>
+    <button id="ctxComment" class="comment-style-btn" title="Ajouter, modifier ou supprimer un commentaire sur la sélection">💬 Commenter</button>
+    <label class="toggle-row">
+      <span>Griser l’outil</span>
+      <input id="ctxMuted" type="checkbox" />
+    </label>
+    <label>Statut
+      <select id="ctxStatus">
+        <option value="draft">Brouillon</option>
+        <option value="validated">Validé</option>
+        <option value="check">À vérifier</option>
+        <option value="error">Erreur</option>
+        <option value="final">Final</option>
+      </select>
+    </label>
+    <label>Taille du texte
+      <input id="ctxFontSize" type="number" min="8" max="48" step="1" />
+    </label>
+    <div id="ctxFreeTextStyle" class="free-text-style-tools" hidden>
+      <div class="mini-label">Style du texte libre</div>
+      <div class="text-style-buttons">
+        <button id="ctxTextBold" type="button" title="Gras" aria-label="Gras"><strong>B</strong></button>
+        <button id="ctxTextItalic" type="button" title="Italique" aria-label="Italique"><em>I</em></button>
+        <button id="ctxTextUnderline" type="button" title="Souligné" aria-label="Souligné"><u>U</u></button>
+        <button id="ctxTextStrike" type="button" title="Barré" aria-label="Barré"><s>S</s></button>
+      </div>
+    </div>
+    <label id="ctxFormulaLabel" hidden>Formule
+      <input id="ctxFormula" type="text" placeholder="Ex. x + y * 2" />
+    </label>
+    <div class="context-grid">
+      <button id="ctxAddLeft">+ Entrée</button>
+      <button id="ctxAddRight">+ Sortie</button>
+    </div>
+    <button id="ctxRenamePorts">Renommer connecteurs</button>
+    <button id="ctxGroup">Grouper sélection</button>
+    <button id="ctxUngroup">Dégrouper</button>
+    <button id="ctxDelete" class="danger">Supprimer</button>
+  </div>
+
+
+  </div>
+
+  <div id="groupStyleMenu" class="context-menu group-style-menu" hidden>
+    <div class="context-title">Style du groupe</div>
+    <label>Titre
+      <input id="groupStyleTitle" type="text" />
+    </label>
+    <label>Commentaire / annotation
+      <textarea id="groupStyleComment" rows="3"></textarea>
+    </label>
+    <label>Couleur
+      <input id="groupStyleColor" type="color" />
+    </label>
+    <label>Taille du titre
+      <input id="groupStyleTitleSize" type="number" min="8" max="64" step="1" />
+    </label>
+    <label>Taille annotation
+      <input id="groupStyleCommentSize" type="number" min="8" max="64" step="1" />
+    </label>
+    <div class="context-grid">
+      <button id="groupStyleClose" type="button">Fermer</button>
+      <button id="groupStyleApply" type="button" class="primary">Appliquer</button>
+    </div>
+  </div>
+
+
+
+
+    <div id="commentModal" class="modal-backdrop comment-backdrop" hidden>
+    <div class="modal-card comment-card">
+      <div class="modal-header">
+        <h2 id="commentModalTitle">Commentaire</h2>
+        <button id="commentCloseBtn" class="icon-button" title="Fermer" onclick="window.__pulpoCommentAction && window.__pulpoCommentAction('close', event)">×</button>
+      </div>
+      <p class="modal-help">Ajoute une note visible via la pastille rouge de l’outil.</p>
+      <label class="comment-label">Commentaire
+        <textarea id="commentTextInput" rows="7" placeholder="Écris ton commentaire ici…"></textarea>
+      </label>
+      <div class="modal-actions comment-actions">
+        <button id="commentDeleteBtn" type="button" class="danger" onclick="window.__pulpoCommentAction && window.__pulpoCommentAction('delete', event)">Supprimer</button>
+        <button id="commentCancelBtn" type="button" onclick="window.__pulpoCommentAction && window.__pulpoCommentAction('close', event)">Annuler</button>
+        <button id="commentSaveBtn" type="button" class="primary" onclick="window.__pulpoCommentAction && window.__pulpoCommentAction('save', event)">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="portMenu" class="port-menu" hidden></div>
+
+
+  <div id="legendPanel" class="legend-panel" hidden>
+    <div class="legend-title">Légende Pulpo</div>
+    <div><span class="legend-chip legend-source"></span> Source d’information</div>
+    <div><span class="legend-chip legend-info"></span> Information à récupérer</div>
+    <div><span class="legend-chip legend-datatype"></span> Type de donnée</div>
+    <div><span class="legend-chip legend-criterion"></span> Critère</div>
+    <div><span class="legend-chip legend-result"></span> Résultat</div>
+    <div><span class="legend-chip legend-tool"></span> Outil</div>
+    <div><span class="legend-chip legend-math"></span> Calcul / formule</div>
+    <div><span class="legend-chip legend-status-check"></span> À vérifier</div>
+    <div><span class="legend-chip legend-status-error"></span> Erreur</div>
+  </div>
+
+  <div id="welcomeModal" class="modal-backdrop welcome-backdrop" hidden>
+    <div class="modal-card welcome-card">
+      <button id="welcomeCloseBtn" class="icon-button welcome-close" title="Fermer">×</button>
+      <div class="welcome-intro" aria-hidden="true">
+        <div class="welcome-scene">
+          <div class="welcome-ink-cloud ink-a"></div>
+          <div class="welcome-ink-cloud ink-b"></div>
+          <div class="welcome-ink-cloud ink-c"></div>
+          <svg class="welcome-tentacles" viewBox="0 0 460 250" aria-hidden="true">
+            <g class="tentacle-group g1">
+              <path class="tentacle-halo" d="M226 76 C214 88 202 104 188 126 C171 153 150 185 122 220" />
+              <path class="tentacle-body tb1" d="M220 74 C212 84 204 95 196 108 C178 136 154 178 126 222 C136 219 144 212 151 203 C176 171 196 140 211 115 C220 101 226 90 232 82 C230 78 225 74 220 74 Z" />
+              <g class="tentacle-suckers s-left-1">
+                <circle cx="197" cy="120" r="3.9"/><circle cx="185" cy="138" r="3.7"/><circle cx="171" cy="157" r="3.4"/><circle cx="156" cy="179" r="3.2"/><circle cx="144" cy="197" r="2.8"/>
+              </g>
+            </g>
+            <g class="tentacle-group g2">
+              <path class="tentacle-halo" d="M224 78 C206 92 186 108 163 130 C137 154 110 184 78 216" />
+              <path class="tentacle-body tb2" d="M219 76 C205 86 190 98 174 111 C148 134 118 165 82 219 C93 215 102 208 110 199 C138 167 162 143 184 124 C201 109 215 98 229 88 C228 83 224 79 219 76 Z" />
+              <g class="tentacle-suckers s-left-2">
+                <circle cx="183" cy="121" r="3.7"/><circle cx="166" cy="137" r="3.5"/><circle cx="147" cy="156" r="3.3"/><circle cx="127" cy="176" r="3.0"/><circle cx="109" cy="194" r="2.7"/>
+              </g>
+            </g>
+            <g class="tentacle-group g3">
+              <path class="tentacle-halo" d="M229 80 C218 98 210 118 206 140 C203 164 205 191 212 222" />
+              <path class="tentacle-body tb3" d="M224 79 C215 95 209 112 205 131 C199 159 201 191 209 224 C218 219 223 211 223 200 C221 175 221 154 225 134 C228 117 233 101 238 88 C235 84 230 80 224 79 Z" />
+              <g class="tentacle-suckers s-mid-1">
+                <circle cx="211" cy="122" r="3.6"/><circle cx="208" cy="143" r="3.4"/><circle cx="208" cy="165" r="3.2"/><circle cx="210" cy="187" r="3.0"/><circle cx="214" cy="206" r="2.7"/>
+              </g>
+            </g>
+            <g class="tentacle-group g4">
+              <path class="tentacle-halo" d="M234 80 C245 98 253 118 257 140 C260 164 258 191 251 222" />
+              <path class="tentacle-body tb4" d="M239 79 C248 95 254 112 258 131 C264 159 262 191 254 224 C245 219 240 211 240 200 C242 175 242 154 238 134 C235 117 230 101 225 88 C228 84 233 80 239 79 Z" />
+              <g class="tentacle-suckers s-mid-2">
+                <circle cx="254" cy="122" r="3.6"/><circle cx="257" cy="143" r="3.4"/><circle cx="257" cy="165" r="3.2"/><circle cx="255" cy="187" r="3.0"/><circle cx="251" cy="206" r="2.7"/>
+              </g>
+            </g>
+            <g class="tentacle-group g5">
+              <path class="tentacle-halo" d="M238 78 C256 92 276 108 299 130 C325 154 352 184 384 216" />
+              <path class="tentacle-body tb5" d="M243 76 C257 86 272 98 288 111 C314 134 344 165 380 219 C369 215 360 208 352 199 C324 167 300 143 278 124 C261 109 247 98 233 88 C234 83 238 79 243 76 Z" />
+              <g class="tentacle-suckers s-right-1">
+                <circle cx="279" cy="121" r="3.7"/><circle cx="296" cy="137" r="3.5"/><circle cx="315" cy="156" r="3.3"/><circle cx="335" cy="176" r="3.0"/><circle cx="353" cy="194" r="2.7"/>
+              </g>
+            </g>
+            <g class="tentacle-group g6">
+              <path class="tentacle-halo" d="M236 76 C248 88 260 104 274 126 C291 153 312 185 340 220" />
+              <path class="tentacle-body tb6" d="M242 74 C250 84 258 95 266 108 C284 136 308 178 336 222 C326 219 318 212 311 203 C286 171 266 140 251 115 C242 101 236 90 230 82 C232 78 237 74 242 74 Z" />
+              <g class="tentacle-suckers s-right-2">
+                <circle cx="265" cy="120" r="3.9"/><circle cx="277" cy="138" r="3.7"/><circle cx="291" cy="157" r="3.4"/><circle cx="306" cy="179" r="3.2"/><circle cx="318" cy="197" r="2.8"/>
+              </g>
+            </g>
+          </svg>
+          <div class="welcome-logo-shell">
+            <svg class="welcome-squid-logo" viewBox="0 0 64 64" aria-hidden="true">
+              <path class="squid-head" d="M32 6 C42 6 49 15 46 26 C44 32 40 36 36 39 L36 56 L32 49 L28 56 L28 39 C24 36 20 32 18 26 C15 15 22 6 32 6 Z"/>
+              <path class="squid-arm" d="M19 25 C10 28 7 37 6 50 C11 40 16 36 22 35 Z"/>
+              <path class="squid-arm" d="M45 25 C54 28 57 37 58 50 C53 40 48 36 42 35 Z"/>
+              <path class="squid-arm" d="M25 35 C18 40 16 48 15 60 C20 51 24 45 29 42 Z"/>
+              <path class="squid-arm" d="M39 35 C46 40 48 48 49 60 C44 51 40 45 35 42 Z"/>
+              <circle class="squid-eye" cx="26" cy="24" r="3.6"/>
+              <circle class="squid-eye" cx="38" cy="24" r="3.6"/>
+              <circle class="squid-eye-dot" cx="26" cy="24" r="1.4"/>
+              <circle class="squid-eye-dot" cx="38" cy="24" r="1.4"/>
+              <ellipse class="squid-mouth" cx="32" cy="31" rx="3.6" ry="2.5"/>
+            </svg>
+          </div>
+        </div>
+        <div class="welcome-brand-text ink-brand-text">
+          <h2 class="ink-word" aria-label="Pulpo"><span>P</span><span>u</span><span>l</span><span>p</span><span>o</span></h2>
+          <p>by Cc</p>
+        </div>
+      </div>
+      <div class="welcome-menu">
+        <p class="modal-help">Choisis comment démarrer.</p>
+        <div class="welcome-actions">
+          <button id="welcomeNewBtn" type="button" class="primary">Nouveau projet</button>
+          <button id="welcomeLoadBtn" type="button">Charger un projet existant</button>
+          <button id="welcomeExcelBtn" type="button">Importer Excel / CSV</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <aside id="aiModal" class="ai-chat-panel" hidden aria-label="Conversation IA Pulpo">
+    <div class="ai-chat-header">
+      <div class="ai-chat-brand">
+        <span class="ai-chat-logo">🐙</span>
+        <div>
+          <h2>IA Pulpo</h2>
+          <p>Générateur de diagramme</p>
+        </div>
+      </div>
+      <button id="aiCloseBtn" class="icon-button" title="Fermer" type="button" onclick="window.pulpoAiClose && window.pulpoAiClose(event)">×</button>
+    </div>
+    <div id="aiMessages" class="ai-messages">
+      <div class="ai-message assistant">
+        <strong>Pulpo IA</strong>
+        <p>Décris ton processus : ce que tu as au départ, ce que tu veux récupérer, contrôler, calculer et obtenir. Je te proposerai un diagramme, puis tu pourras le générer.</p>
+      </div>
+    </div>
+    <div class="ai-options compact">
+      <label><input id="aiClearCurrent" type="checkbox" /> Remplacer le diagramme actuel</label>
+      <label><input id="aiCreateGroup" type="checkbox" checked /> Créer un groupe IA</label>
+    </div>
+    <div class="ai-preview" id="aiPreviewBox">En attente d’une description.</div>
+    <div class="ai-chat-input-row">
+      <textarea id="aiPromptInput" rows="3" placeholder="Ex. Je pars d’un PDF plan architecte et d’un Excel surfaces. Je veux récupérer la SHAB, contrôler les typologies, calculer la moyenne et obtenir un résultat final."></textarea>
+      <button id="aiSendBtn" type="button" title="Envoyer à l’IA" onclick="window.pulpoAiSend && window.pulpoAiSend(event)">➤</button>
+    </div>
+    <div class="ai-chat-actions">
+      <button id="aiPreviewBtn" type="button" onclick="window.pulpoAiPreview && window.pulpoAiPreview(event)">Analyser</button>
+      <button id="aiGenerateBtn" type="button" class="primary" onclick="window.pulpoAiGenerate && window.pulpoAiGenerate(event)">Générer le diagramme</button>
+    </div>
+  </aside>
+
+
+
+  <div id="pdfExportModal" class="modal-backdrop" hidden>
+    <div class="modal-card pdf-export-card">
+      <div class="modal-header">
+        <h2>Exporter en PDF</h2>
+        <button id="pdfExportCloseBtn" class="icon-button" title="Fermer" type="button" onclick="window.closePdfExportModal && window.closePdfExportModal(event)">×</button>
+      </div>
+      <p class="modal-help">Choisis le contenu à exporter. Le PDF sera ajusté automatiquement pour une lecture claire.</p>
+      <div class="pdf-export-options">
+        <label class="pdf-option"><input type="radio" name="pdfExportMode" value="full" checked /> Diagramme complet (ajusté à la page)</label>
+        <label class="pdf-option"><input type="radio" name="pdfExportMode" value="groups" /> Un ou plusieurs groupes</label>
+        <label class="pdf-option"><input type="radio" name="pdfExportMode" value="selection" /> Sélection courante</label>
+      </div>
+      <div class="pdf-export-settings">
+        <label>Format
+          <select id="pdfFormatSelect">
+            <option value="auto" selected>Auto</option>
+            <option value="landscape">A4 paysage</option>
+            <option value="portrait">A4 portrait</option>
+          </select>
+        </label>
+        <label class="check-line">
+          <input id="pdfHeaderInput" type="checkbox" checked /> Ajouter titre + date en en-tête
+        </label>
+      </div>
+      <div id="pdfGroupsPanel" class="pdf-groups-panel" hidden>
+        <div class="pdf-groups-head">
+          <strong>Groupes à exporter</strong>
+          <div class="pdf-group-quick-actions">
+            <button id="pdfSelectAllGroupsBtn" type="button">Tout sélectionner</button>
+            <button id="pdfClearGroupsBtn" type="button">Effacer</button>
+          </div>
+        </div>
+        <div id="pdfGroupsList" class="pdf-groups-list"></div>
+        <p class="modal-help compact">Si plusieurs groupes sont cochés, ils seront mis en page automatiquement pour optimiser chaque page.</p>
+      </div>
+      <label class="pdf-file-label">Nom du fichier
+        <input id="pdfFilenameInput" type="text" value="pulpo-export" placeholder="Nom du PDF" />
+      </label>
+      <div class="modal-actions">
+        <button id="pdfExportCancelBtn" type="button" onclick="window.closePdfExportModal && window.closePdfExportModal(event)">Annuler</button>
+        <button id="pdfExportRunBtn" type="button" class="primary" onclick="window.runPdfExport && window.runPdfExport(event)">Exporter le PDF</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="excelModal" class="modal-backdrop" hidden>
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>Importer Excel / CSV</h2>
+        <button id="excelCloseBtn" class="icon-button" title="Fermer">×</button>
+      </div>
+      <p class="modal-help">Sélectionne un fichier, choisis la feuille et la plage de cellules à transformer en box.</p>
+      <div class="excel-grid">
+        <label>Fichier
+          <button id="excelChooseBtn" type="button">Choisir un fichier</button>
+        </label>
+        <label>Feuille
+          <select id="excelSheetSelect"></select>
+        </label>
+        <label>Plage de cellules
+          <input id="excelRangeInput" type="text" value="A1:D10" placeholder="Ex. A1:D10" />
+        </label>
+        <label>Mode de création
+          <select id="excelModeSelect">
+            <option value="cell">1 box par cellule</option>
+            <option value="row">1 box par ligne</option>
+            <option value="column">1 box par colonne</option>
+          </select>
+        </label>
+        <label>Préfixe des noms
+          <input id="excelPrefixInput" type="text" value="Excel" />
+        </label>
+        <label class="check-line">
+          <input id="excelSkipEmptyInput" type="checkbox" checked /> Ignorer les cellules vides
+        </label>
+      </div>
+      <div class="modal-actions">
+        <button id="excelPreviewBtn" type="button">Prévisualiser</button>
+        <button id="excelCreateBtn" type="button" class="primary">Créer les box</button>
+      </div>
+      <div id="excelPreview" class="excel-preview">Aucun fichier sélectionné.</div>
+    </div>
+  </div>
+
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="app.js"></script>
+
+  <script>
+    // v61 - pont d'interaction direct pour le chat IA, indépendant des gestionnaires globaux.
+    (function () {
+      function stop(evt) {
+        if (!evt) return;
+        evt.preventDefault && evt.preventDefault();
+        evt.stopPropagation && evt.stopPropagation();
+        evt.stopImmediatePropagation && evt.stopImmediatePropagation();
+      }
+      function aiBox() { return document.getElementById('aiMessages'); }
+      function aiInput() { return document.getElementById('aiPromptInput'); }
+      function addMessage(role, text) {
+        var box = aiBox();
+        if (!box) return;
+        var msg = document.createElement('div');
+        msg.className = 'ai-message ' + (role === 'user' ? 'user' : 'assistant');
+        var who = role === 'user' ? 'Toi' : 'Pulpo IA';
+        msg.innerHTML = '<strong></strong><p></p>';
+        msg.querySelector('strong').textContent = who;
+        msg.querySelector('p').textContent = String(text || '').trim() || 'Message vide.';
+        box.appendChild(msg);
+        box.scrollTop = box.scrollHeight;
+      }
+      function localPlan(text) {
+        if (window.makeAiPlan) return window.makeAiPlan(text);
+        var clean = String(text || '').trim();
+        if (!clean) return [];
+        var lines = clean.split(/\n+/).map(function (x) { return x.trim(); }).filter(Boolean);
+        var chains = [];
+        lines.forEach(function (line) {
+          var parts = line.split(/\s*(?:->|→|>)\s*/).map(function (p) { return p.trim(); }).filter(Boolean);
+          if (parts.length > 1) chains.push({ name: 'Flux ' + (chains.length + 1), chain: parts });
+        });
+        if (!chains.length) chains.push({ name: 'Flux 1', chain: ['Source de départ', 'Information à récupérer', 'Résultat final'] });
+        return chains;
+      }
+      function summary(plan) {
+        if (!plan || !plan.length) return 'Je n’ai pas encore détecté de flux clair. Essaie avec : Source → Information → Calcul → Résultat.';
+        return 'J’ai détecté ' + plan.length + ' flux possible' + (plan.length > 1 ? 's' : '') + ' :\n' + plan.map(function (p, i) { return (i + 1) + '. ' + p.chain.join('  →  '); }).join('\n') + '\n\nTu peux cliquer sur “Générer le diagramme”.';
+      }
+      window.pulpoAiClose = function (evt) {
+        stop(evt);
+        var modal = document.getElementById('aiModal');
+        if (modal) {
+          modal.hidden = true;
+          modal.style.display = 'none';
+          modal.classList.remove('open');
+          modal.setAttribute('aria-hidden', 'true');
+        }
+      };
+      window.pulpoAiPreview = function (evt) {
+        stop(evt);
+        var input = aiInput();
+        var text = input ? input.value : '';
+        var box = document.getElementById('aiPreviewBox');
+        var plan = localPlan(text);
+        if (box) box.textContent = text.trim() ? plan.map(function (p) { return '• ' + p.chain.join('  →  '); }).join('\n') : 'Décris ton processus pour voir une prévisualisation.';
+        addMessage('assistant', summary(plan));
+        input && input.focus();
+      };
+      window.pulpoAiSend = function (evt) {
+        stop(evt);
+        var input = aiInput();
+        var text = input ? input.value : '';
+        if (!text.trim()) {
+          addMessage('assistant', 'Écris d’abord une description du processus à transformer en diagramme.');
+          input && input.focus();
+          return;
+        }
+        addMessage('user', text.trim());
+        window.pulpoAiPreview(evt);
+      };
+      window.pulpoAiGenerate = function (evt) {
+        stop(evt);
+        try {
+          if (typeof window.generateAiDiagram === 'function') {
+            window.generateAiDiagram();
+          } else if (typeof generateAiDiagram === 'function') {
+            generateAiDiagram();
+          } else {
+            addMessage('assistant', 'Le générateur local n’est pas disponible dans cette version.');
+          }
+        } catch (err) {
+          console.error(err);
+          addMessage('assistant', 'Erreur pendant la génération : ' + (err && err.message ? err.message : err));
+        }
+      };
+      function bind() {
+        [
+          ['aiCloseBtn', window.pulpoAiClose],
+          ['aiSendBtn', window.pulpoAiSend],
+          ['aiPreviewBtn', window.pulpoAiPreview],
+          ['aiGenerateBtn', window.pulpoAiGenerate]
+        ].forEach(function (pair) {
+          var el = document.getElementById(pair[0]);
+          if (!el) return;
+          el.style.pointerEvents = 'auto';
+          el.addEventListener('pointerdown', pair[1], true);
+          el.addEventListener('click', pair[1], true);
+        });
+      }
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bind);
+      else bind();
+    })();
+  </script>
+</body>
+</html>
