@@ -331,7 +331,7 @@ button.danger { color: var(--danger); border-color: #fecaca; }
   display: none;
   cursor: pointer;
 }
-/* Le bouton suppression n’apparait plus quand on vise le point de connexion.
+/* Le bouton suppression nâ€™apparait plus quand on vise le point de connexion.
    Il apparait seulement au survol du libelle ou du bouton lui-meme. */
 .port-label:hover ~ .port-remove,
 .port-remove:hover { display: block; }
@@ -708,7 +708,7 @@ button {
   .tool-icon { width: 44px; height: 44px; }
 }
 
-/* Version 7: calculs, réglages au double-clic et redimensionnement */
+/* Version 7: calculs, rÃ©glages au double-clic et redimensionnement */
 .kind-add,
 .kind-subtract,
 .kind-multiply,
@@ -748,7 +748,7 @@ button {
 .node-content { align-self: stretch; }
 .tools-group { min-width: 470px; }
 
-/* Version 8: liaisons par glisser-déposer + groupes déplaçables avec titre/commentaire */
+/* Version 8: liaisons par glisser-dÃ©poser + groupes dÃ©plaÃ§ables avec titre/commentaire */
 .connection.preview {
   pointer-events: none;
   stroke: var(--accent);
@@ -1159,7 +1159,7 @@ button {
   accent-color: #111827;
 }
 .muted-manual::after {
-  content: "GRISÉ";
+  content: "GRISÃ‰";
   position: absolute;
   right: 30px;
   bottom: 8px;
@@ -1234,7 +1234,7 @@ button {
   transform: scale(1.12);
 }
 
-/* Fenêtre contextuelle de commentaire */
+/* FenÃªtre contextuelle de commentaire */
 .comment-card {
   width: min(520px, calc(100vw - 32px));
 }
@@ -1276,7 +1276,7 @@ button {
 }
 
 
-/* Version 29: Pulpoflow by Cc, tags métier et interface plus dynamique */
+/* Version 29: Pulpoflow by Cc, tags mÃ©tier et interface plus dynamique */
 :root {
   --bg: #eef3fb;
   --panel: rgba(255,255,255,.88);
@@ -1413,7 +1413,7 @@ button:hover { box-shadow: 0 8px 18px rgba(15,23,42,.10); }
   border-color: transparent;
 }
 
-/* v30: barre d'outils classée, icônes et ergonomie */
+/* v30: barre d'outils classÃ©e, icÃ´nes et ergonomie */
 .toolbar {
   min-height: 112px;
   max-height: 150px;
@@ -1467,7 +1467,7 @@ button:hover { box-shadow: 0 8px 18px rgba(15,23,42,.10); }
   transform: translateY(-2px) scale(1.04);
 }
 
-/* v30: boutons activité bien visibles au centre des box */
+/* v30: boutons activitÃ© bien visibles au centre des box */
 .node-content {
   min-height: calc(100% - 38px);
 }
@@ -1546,7 +1546,7 @@ button:hover { box-shadow: 0 8px 18px rgba(15,23,42,.10); }
   color: #155e75;
 }
 
-/* v32 - correction stricte du connecteur d'entrée : visuel entièrement dans la box */
+/* v32 - correction stricte du connecteur d'entrÃ©e : visuel entiÃ¨rement dans la box */
 .node-body {
   grid-template-columns: 42px 1fr 10px;
   padding-left: 0;
@@ -1887,7 +1887,7 @@ button:hover { box-shadow: 0 8px 18px rgba(15,23,42,.10); }
   .activity-tag { max-width: 24px; }
 }
 
-/* v36 - tailles optimisées, logos toujours contenus, styles de groupe */
+/* v36 - tailles optimisÃ©es, logos toujours contenus, styles de groupe */
 .node {
   min-width: 190px;
   min-height: 138px;
@@ -1954,7 +1954,7 @@ button:hover { box-shadow: 0 8px 18px rgba(15,23,42,.10); }
   font-size: var(--group-comment-size, 12px);
 }
 
-/* v37 — lisibilité, recherche, statuts et modes */
+/* v37 â€” lisibilitÃ©, recherche, statuts et modes */
 .mode-controls button.active,
 #legendToggleBtn.active {
   background: #111827;
@@ -2069,7 +2069,7 @@ body.mode-audit .node.audit-issue {
   box-shadow: 0 0 0 4px rgba(245,158,11,.22), 0 18px 38px rgba(15,23,42,.16);
 }
 body.mode-audit .node.audit-issue::after {
-  content: 'À contrôler';
+  content: 'Ã€ contrÃ´ler';
   position: absolute;
   right: 10px;
   bottom: 10px;
@@ -2091,7 +2091,7 @@ body.mode-audit .node.audit-issue::after {
   background: #fff;
 }
 
-/* v38 — barre horizontale compacte, sans défilement */
+/* v38 â€” barre horizontale compacte, sans dÃ©filement */
 .toolbar {
   flex-wrap: wrap !important;
   align-content: flex-start !important;
@@ -2241,7 +2241,7 @@ body.mode-audit .node.audit-issue::after {
   .search-group { flex-basis: 180px !important; }
 }
 
-/* v41 - groupes imbriqués */
+/* v41 - groupes imbriquÃ©s */
 .group-box-parent {
   border-style: solid;
   box-shadow: 0 10px 28px rgba(15, 23, 42, 0.10), inset 0 0 0 2px rgba(255,255,255,0.50);
@@ -2251,11 +2251,11 @@ body.mode-audit .node.audit-issue::after {
   background: color-mix(in srgb, var(--group-color) 48%, transparent);
 }
 .group-box-child .group-title::before {
-  content: "↳ ";
+  content: "â†³ ";
   opacity: .75;
 }
 
-/* v44 - libelles compacts sous les icônes */
+/* v44 - libelles compacts sous les icÃ´nes */
 .toolbar .tool-icon,
 .toolbar .icon-controls button,
 .toolbar .clear-group button {
@@ -2322,7 +2322,7 @@ body.mode-planning .node.kind-milestone {
 .milestone-widget textarea { grid-column: 1 / -1; resize: none; min-height: 42px; }
 .kind-milestone .node-kind { background: #f59e0b; color: #fff; }
 
-/* v45 - barre plus lisible : noms masqués, tooltip contextuel après 1 seconde */
+/* v45 - barre plus lisible : noms masquÃ©s, tooltip contextuel aprÃ¨s 1 seconde */
 .toolbar .tool-icon,
 .toolbar .icon-controls button,
 .toolbar .clear-group button {
@@ -2432,7 +2432,7 @@ body.mode-planning .node.kind-milestone {
   min-width: auto !important;
 }
 
-/* v52: accueil affiné, halo violet et tentacules plus organiques */
+/* v52: accueil affinÃ©, halo violet et tentacules plus organiques */
 .startup-hidden .toolbar,
 .startup-hidden .topbar,
 .startup-hidden .workspace-wrap {
@@ -3145,7 +3145,7 @@ body.mode-planning .node.kind-milestone {
 }
 
 
-/* v61 - chat IA réellement cliquable */
+/* v61 - chat IA rÃ©ellement cliquable */
 #aiModal.ai-chat-panel {
   pointer-events: auto !important;
   z-index: 2147483647 !important;
@@ -3184,7 +3184,7 @@ body.mode-planning .node.kind-milestone {
 }
 
 
-/* v65 - correctif définitif fenêtre commentaire */
+/* v65 - correctif dÃ©finitif fenÃªtre commentaire */
 .comment-backdrop:not([hidden]) {
   display: grid !important;
   place-items: center !important;
@@ -3462,7 +3462,7 @@ body.mode-planning .node.kind-milestone {
   background: transparent !important;
 }
 
-/* v74 - édition directe du texte libre au double-clic */
+/* v74 - Ã©dition directe du texte libre au double-clic */
 .node.free-text-floating .free-text-area[contenteditable="false"] {
   -webkit-user-modify: read-only;
 }
@@ -3653,3 +3653,86 @@ body.mode-planning .node.kind-milestone {
 .node-body { min-height: 42px; }
 .node-content { min-height: 28px; padding: 5px 8px; }
 .node .ports.left .port-row { min-height: 24px; }
+
+/* V80 - slider compact */
+.kind-slider .node-content {
+  justify-content: center;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+.compact-slider-wrap {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(72px, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+}
+.compact-slider-wrap input[type="range"] {
+  width: 100%;
+  min-width: 72px;
+  margin: 0;
+}
+.compact-slider-value {
+  min-width: 48px;
+  max-width: 72px;
+  height: 24px;
+  border: 1px solid rgba(15,23,42,.16);
+  border-radius: 999px;
+  background: rgba(255,255,255,.86);
+  color: var(--ink);
+  font-size: var(--node-font-size, 12px);
+  font-weight: 700;
+  line-height: 1;
+  padding: 2px 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: text;
+}
+.kind-slider .node-resizer { opacity: .45; }
+
+
+/* V81 - slider ultra compact, toujours redimensionnable */
+.node.kind-slider {
+  min-width: 126px !important;
+  min-height: 64px !important;
+}
+.kind-slider .node-header {
+  min-height: 24px !important;
+  height: 24px !important;
+  max-height: 24px !important;
+  padding: 0 8px !important;
+  font-size: 10px !important;
+}
+.kind-slider .node-title {
+  -webkit-line-clamp: 1 !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+}
+.kind-slider .node-kind,
+.kind-slider .node-actions {
+  display: none !important;
+}
+.kind-slider .node-body {
+  min-height: 36px !important;
+  grid-template-columns: 20px 1fr 10px !important;
+  padding: 2px 0 4px !important;
+}
+.kind-slider .node-content {
+  min-height: 28px !important;
+  padding: 2px 4px !important;
+}
+.compact-slider-wrap {
+  grid-template-columns: minmax(48px, 1fr) auto !important;
+  gap: 5px !important;
+}
+.compact-slider-wrap input[type="range"] {
+  min-width: 48px !important;
+}
+.compact-slider-value {
+  min-width: 34px !important;
+  max-width: 50px !important;
+  height: 19px !important;
+  padding: 1px 5px !important;
+  font-size: 10px !important;
+}
