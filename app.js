@@ -135,7 +135,7 @@ function minNodeSize(node) {
     panel: 76,
     freeText: 80,
     table: 142,
-    slider: 94,
+    slider: 22,
     switch: 54,
     add: 54,
     subtract: 54,
@@ -152,7 +152,7 @@ function minNodeSize(node) {
     panel: 210,
     freeText: 220,
     table: 300,
-    slider: 230,
+    slider: 126,
     switch: 200,
     add: 200,
     subtract: 210,
@@ -164,8 +164,9 @@ function minNodeSize(node) {
     barChart: 260,
     pieChart: 260
   }[node.kind || 'box'] ?? 190;
-  const baseMinHeight = node.programStyle ? 138 : 82;
-  return { width: minWidth, height: Math.max(baseMinHeight, headerH + tagH + contentExtra + portH) };
+  const baseMinHeight = node.kind === 'slider' ? 64 : (node.programStyle ? 138 : 82);
+  const effectiveHeaderH = node.kind === 'slider' ? 24 : headerH;
+  return { width: minWidth, height: Math.max(baseMinHeight, effectiveHeaderH + tagH + contentExtra + portH) };
 }
 function enforceNodeMinimum(node) {
   const min = minNodeSize(node);
@@ -340,7 +341,7 @@ function createNode(opts = {}, doSelect = true) {
     panel: { title: 'Panel', leftPorts: ['In'], rightPorts: ['Texte'], color: '#fff7ad', text: 'Écris ton texte ici...', width: 250, height: 145 },
     freeText: { title: 'Texte libre', leftPorts: [], rightPorts: [], color: 'transparent', text: 'Texte libre', width: 260, height: 90 },
     table: { title: 'Tableau', leftPorts: ['In'], rightPorts: ['Out'], color: '#ffffff', width: 360, height: 260, tableData: [['', '', ''], ['', '', ''], ['', '', '']] },
-    slider: { title: 'Slider', leftPorts: [], rightPorts: ['Valeur'], color: '#e0f2fe', value: 50, min: 0, max: 100, width: 240, height: 128 },
+    slider: { title: 'Slider', leftPorts: [], rightPorts: ['Valeur'], color: '#e0f2fe', value: 50, min: 0, max: 100, step: 1, width: 132, height: 64 },
     switch: { title: 'Vrai / Faux', leftPorts: ['In'], rightPorts: ['Out'], color: '#dcfce7', value: true, width: 220, height: 118 },
     barChart: { title: 'Diagramme à barres', leftPorts: ['Donnée 1', 'Donnée 2', 'Donnée 3'], rightPorts: ['Image'], color: '#ffffff', width: 300, height: 210, chartColors: ['#2563eb', '#16a34a', '#f59e0b', '#dc2626', '#7c3aed'] },
     pieChart: { title: 'Diagramme camembert', leftPorts: ['Donnée 1', 'Donnée 2', 'Donnée 3'], rightPorts: ['Image'], color: '#ffffff', width: 300, height: 230, chartColors: ['#2563eb', '#16a34a', '#f59e0b', '#dc2626', '#7c3aed'] },
@@ -368,6 +369,9 @@ function createNode(opts = {}, doSelect = true) {
     value: opts.value ?? defaults.value ?? 0,
     min: opts.min ?? defaults.min ?? 0,
     max: opts.max ?? defaults.max ?? 100,
+    step: opts.step ?? defaults.step ?? 1,
+    inheritedValue: opts.inheritedValue ?? null,
+    inheritedInputs: Array.isArray(opts.inheritedInputs) ? [...opts.inheritedInputs] : [],
     formula: opts.formula ?? defaults.formula ?? 'x + y',
     fileName: opts.fileName ?? defaults.fileName ?? '',
     fileData: opts.fileData ?? defaults.fileData ?? '',
@@ -490,7 +494,7 @@ function defaultVisualStyleForNode(node) {
   const dimensions = {
     box: { width: 220, height: 146 },
     panel: { width: 250, height: 190 },
-    slider: { width: 240, height: 176 },
+    slider: { width: 132, height: 64 },
     switch: { width: 220, height: 118 },
     barChart: { width: 300, height: 210 },
     pieChart: { width: 300, height: 230 },
@@ -554,8 +558,29 @@ function applyCopiedStyleToSelectionOrNode(nodeId) {
   return true;
 }
 
+function refreshInheritedValues() {
+  const p = currentProject();
+  if (!p || !Array.isArray(p.nodes)) return;
+  for (const node of p.nodes) {
+    const values = (node.leftPorts || []).map((port, index) => {
+      const c = incomingConnection(node.id, port.id);
+      if (!c) return null;
+      const source = getNode(c.from.nodeId);
+      return {
+        port: port.label || `Entrée ${index + 1}`,
+        sourceId: source?.id || null,
+        sourceName: source?.title || 'Source',
+        value: outputValue(c.from.nodeId, new Set([node.id]))
+      };
+    }).filter(v => v && v.value !== null && v.value !== undefined);
+    node.inheritedInputs = values;
+    node.inheritedValue = values.length ? values[0].value : null;
+  }
+}
+
 function render() {
   ensureProject();
+  refreshInheritedValues();
   renderProjectTabs();
   renderGroupFocusSelect();
   updateViewModeUI();
@@ -1337,18 +1362,63 @@ function renderNodeContent(node, content) {
     return;
   }
   if (node.kind === 'slider') {
-    const wrap = document.createElement('div'); wrap.className = 'node-control slider-wrap';
-    const value = document.createElement('input'); value.type = 'number'; value.value = node.value; value.min = node.min; value.max = node.max;
-    const range = document.createElement('input'); range.type = 'range'; range.value = node.value; range.min = node.min; range.max = node.max;
-    const limits = document.createElement('div'); limits.className = 'slider-limits';
-    const min = document.createElement('input'); min.type = 'number'; min.value = node.min; min.title = 'Minimum';
-    const max = document.createElement('input'); max.type = 'number'; max.value = node.max; max.title = 'Maximum';
-    const updateRange = () => { range.min = node.min; range.max = node.max; value.min = node.min; value.max = node.max; range.value = node.value; value.value = node.value; };
-    value.oninput = () => { node.value = Number(value.value); range.value = node.value; };
-    range.oninput = () => { node.value = Number(range.value); value.value = node.value; };
-    min.onchange = () => { node.min = Number(min.value); if (node.value < node.min) node.value = node.min; updateRange(); };
-    max.onchange = () => { node.max = Number(max.value); if (node.value > node.max) node.value = node.max; updateRange(); };
-    limits.append(min, max); wrap.append(value, range, limits); content.appendChild(wrap); return;
+    if (!Number.isFinite(Number(node.step)) || Number(node.step) <= 0) node.step = 1;
+    const wrap = document.createElement('div'); wrap.className = 'node-control compact-slider-wrap';
+    const range = document.createElement('input');
+    range.type = 'range';
+    range.value = node.value;
+    range.min = node.min;
+    range.max = node.max;
+    range.step = node.step;
+    range.title = `Min ${node.min} · Max ${node.max} · Pas ${node.step}`;
+    const value = document.createElement('button');
+    value.type = 'button';
+    value.className = 'compact-slider-value';
+    value.textContent = formatValue(node.value);
+    value.title = 'Double-clic gauche : entrer la valeur · Clic droit : modifier min/max/pas';
+    const applyValue = raw => {
+      const num = Number(String(raw).replace(',', '.'));
+      if (!Number.isFinite(num)) return;
+      node.value = Math.min(Number(node.max), Math.max(Number(node.min), num));
+      range.value = node.value;
+      value.textContent = formatValue(node.value);
+    };
+    range.addEventListener('input', () => {
+      node.value = Number(range.value);
+      value.textContent = formatValue(node.value);
+    });
+    value.addEventListener('dblclick', e => {
+      e.preventDefault();
+      e.stopPropagation();
+      const raw = prompt('Valeur du curseur', String(node.value));
+      if (raw === null) return;
+      applyValue(raw);
+      renderConnections();
+    });
+    const editRange = e => {
+      e.preventDefault();
+      e.stopPropagation();
+      const raw = prompt('Range du curseur : min, max, pas', `${node.min}, ${node.max}, ${node.step}`);
+      if (raw === null) return;
+      const parts = raw.split(/[;,]/).map(v => Number(String(v).trim().replace(',', '.')));
+      if (parts.length < 2 || !Number.isFinite(parts[0]) || !Number.isFinite(parts[1])) {
+        alert('Format attendu : min, max, pas. Exemple : 0, 100, 1');
+        return;
+      }
+      let [min, max, step] = parts;
+      if (min > max) [min, max] = [max, min];
+      if (!Number.isFinite(step) || step <= 0) step = node.step || 1;
+      node.min = min;
+      node.max = max;
+      node.step = step;
+      node.value = Math.min(max, Math.max(min, Number(node.value) || 0));
+      render();
+    };
+    value.addEventListener('contextmenu', editRange);
+    range.addEventListener('contextmenu', editRange);
+    wrap.append(range, value);
+    content.appendChild(wrap);
+    return;
   }
   if (node.kind === 'switch') {
     const label = document.createElement('label'); label.className = 'node-control switch-control';
