@@ -168,6 +168,14 @@ button.danger { color: var(--danger); border-color: #fecaca; }
 }
 .node-header:active { cursor: grabbing; }
 .node-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: calc(var(--node-font-size, 12px) + 1px); }
+.node-title[contenteditable="true"] {
+  outline: 2px solid rgba(37,99,235,.45);
+  outline-offset: 2px;
+  border-radius: 7px;
+  background: rgba(255,255,255,.82);
+  padding: 1px 4px;
+  cursor: text;
+}
 .node-actions { color: var(--muted); }
 .node-body {
   position: relative;
@@ -495,6 +503,11 @@ button.danger { color: var(--danger); border-color: #fecaca; }
   border-radius: 16px;
   box-shadow: 0 18px 50px rgba(15,23,42,.25);
   backdrop-filter: blur(10px);
+  max-height: min(320px, calc(100vh - 80px));
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
 }
 .context-menu[hidden] { display: none; }
 .context-title {
@@ -996,6 +1009,8 @@ button {
   border-radius: 18px;
   box-shadow: 0 20px 55px rgba(15,23,42,.28);
   backdrop-filter: blur(12px);
+  max-height: calc(100vh - 24px);
+  overflow: auto;
 }
 .port-menu[hidden] { display: none !important; }
 .port-menu-title {
@@ -5633,7 +5648,12 @@ function renderNode(node, muted) {
   el.style.height = `${node.height || 112}px`;
   el.style.background = node.color;
   el.style.setProperty('--node-font-size', `${node.fontSize || 12}px`);
-  el.querySelector('.node-title').textContent = node.title;
+  const nodeTitleEl = el.querySelector('.node-title');
+  nodeTitleEl.textContent = node.title;
+  nodeTitleEl.title = 'Double-clic gauche pour renommer cet outil';
+  nodeTitleEl.addEventListener('pointerdown', e => {
+    if (nodeTitleEl.isContentEditable) e.stopPropagation();
+  });
   el.querySelector('.node-kind').textContent = displayNodeKind(node);
   const status = node.status || 'draft';
   if (status && status !== 'draft') {
@@ -5667,10 +5687,7 @@ function renderNode(node, muted) {
   });
   el.addEventListener('dblclick', e => {
     if (e.target.classList.contains('port') || e.target.classList.contains('port-label') || e.target.closest('.node-control')) return;
-    e.preventDefault();
-    e.stopPropagation();
-    if (!state.selectedNodes.has(node.id)) selectNode(node.id, e.shiftKey);
-    showContextMenu(e.clientX, e.clientY, node.id);
+    startInlineNodeRename(e, node, el);
   });
   el.addEventListener('contextmenu', e => {
     e.preventDefault();
@@ -7455,14 +7472,7 @@ function showPortMenu(nodeId, portId, side, x, y) {
   disconnectBlock.append(disconnectBtn, sub);
   portMenu.appendChild(disconnectBlock);
 
-  const rectMargin = 12;
-  portMenu.style.left = `${Math.min(x, window.innerWidth - 360 - rectMargin)}px`;
-  portMenu.style.top = `${Math.min(y, window.innerHeight - 520 - rectMargin)}px`;
-  requestAnimationFrame(() => {
-    const r = portMenu.getBoundingClientRect();
-    if (r.right > window.innerWidth - rectMargin) portMenu.style.left = `${window.innerWidth - r.width - rectMargin}px`;
-    if (r.bottom > window.innerHeight - rectMargin) portMenu.style.top = `${window.innerHeight - r.height - rectMargin}px`;
-  });
+  positionFloatingMenu(portMenu, x, y, { width: 350, height: 340, pad: 12 });
 }
 
 function portContextMenu(nodeId, portId, side) {
@@ -8541,11 +8551,7 @@ function showGroupStyleMenu(clientX, clientY, groupId) {
   if (titleSize) titleSize.value = g.titleFontSize || 12;
   if (commentSize) commentSize.value = g.commentFontSize || 12;
   groupStyleMenu.hidden = false;
-  const pad = 10;
-  const w = groupStyleMenu.offsetWidth || 260;
-  const h = groupStyleMenu.offsetHeight || 320;
-  groupStyleMenu.style.left = `${Math.min(clientX, window.innerWidth - w - pad)}px`;
-  groupStyleMenu.style.top = `${Math.min(clientY, window.innerHeight - h - pad)}px`;
+  positionFloatingMenu(groupStyleMenu, clientX, clientY, { width: 270, height: 320, pad: 12 });
 }
 
 function applyGroupStyleMenu() {
@@ -9003,6 +9009,95 @@ async function save() {
 function load() { const raw = localStorage.getItem('node-board-v2') || localStorage.getItem('node-board-v1'); if (!raw) return setStatus('Aucune sauvegarde navigateur trouvée. Utilise Importer JSON pour ouvrir un fichier.'); try { state = normalizeLoadedState(JSON.parse(raw)); syncInspector(); render(); setStatus('Ancienne sauvegarde navigateur chargée.'); } catch { setStatus('Sauvegarde navigateur incompatible.'); } }
 
 
+function positionFloatingMenu(menu, clientX, clientY, options = {}) {
+  if (!menu) return;
+  const pad = Number(options.pad || 12);
+  const preferredWidth = Number(options.width || menu.offsetWidth || 270);
+  const requestedHeight = Number(options.height || 360);
+  const viewportMaxHeight = Math.max(180, window.innerHeight - pad * 2);
+  const finalMaxHeight = Math.min(requestedHeight, viewportMaxHeight);
+  menu.style.maxHeight = `${Math.round(finalMaxHeight)}px`;
+  menu.style.overflowY = 'auto';
+  menu.style.overflowX = 'hidden';
+  menu.style.webkitOverflowScrolling = 'touch';
+
+  let x = Number.isFinite(clientX) ? clientX : pad;
+  let y = Number.isFinite(clientY) ? clientY : pad;
+  const maxX = Math.max(pad, window.innerWidth - preferredWidth - pad);
+  const maxY = Math.max(pad, window.innerHeight - finalMaxHeight - pad);
+  menu.style.left = `${Math.max(pad, Math.min(x, maxX))}px`;
+  menu.style.top = `${Math.max(pad, Math.min(y, maxY))}px`;
+
+  requestAnimationFrame(() => {
+    const rect = menu.getBoundingClientRect();
+    const visibleHeight = Math.min(rect.height || finalMaxHeight, finalMaxHeight);
+    let nx = rect.left;
+    let ny = rect.top;
+    if (rect.right > window.innerWidth - pad) nx = window.innerWidth - rect.width - pad;
+    if (ny + visibleHeight > window.innerHeight - pad) ny = window.innerHeight - visibleHeight - pad;
+    if (nx < pad) nx = pad;
+    if (ny < pad) ny = pad;
+    menu.style.left = `${Math.round(nx)}px`;
+    menu.style.top = `${Math.round(ny)}px`;
+  });
+}
+
+function startInlineNodeRename(e, node, el) {
+  if (!node || !el) return;
+  if (e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+  if (!state.selectedNodes.has(node.id)) selectNode(node.id, false);
+  const title = el.querySelector('.node-title');
+  if (!title || title.dataset.renaming === 'true') return;
+  const before = node.title || '';
+  pushHistory();
+  title.dataset.renaming = 'true';
+  title.contentEditable = 'true';
+  title.spellcheck = false;
+  title.focus();
+  const range = document.createRange();
+  range.selectNodeContents(title);
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+  setStatus('Renommage direct : tape le nouveau nom, puis Entrée pour valider ou Échap pour annuler.');
+
+  const cleanup = () => {
+    title.removeEventListener('keydown', onKeyDown);
+    title.removeEventListener('blur', commit);
+    title.contentEditable = 'false';
+    title.dataset.renaming = 'false';
+  };
+  const commit = () => {
+    const next = String(title.textContent || '').replace(/\s+/g, ' ').trim();
+    node.title = next || before || kindLabel(node.kind || 'box');
+    cleanup();
+    render();
+    setStatus('Outil renommé.');
+  };
+  const cancel = () => {
+    node.title = before;
+    title.textContent = before;
+    cleanup();
+    render();
+    setStatus('Renommage annulé.');
+  };
+  const onKeyDown = ev => {
+    ev.stopPropagation();
+    if (ev.key === 'Enter') {
+      ev.preventDefault();
+      commit();
+    } else if (ev.key === 'Escape') {
+      ev.preventDefault();
+      cancel();
+    }
+  };
+  title.addEventListener('keydown', onKeyDown);
+  title.addEventListener('blur', commit);
+}
+
 function hideContextMenu() {
   if (contextMenu) contextMenu.hidden = true;
   if (groupStyleMenu) groupStyleMenu.hidden = true;
@@ -9037,11 +9132,7 @@ function showContextMenu(clientX, clientY, nodeId) {
   if (node.kind === 'freeText') updateTextStyleButtons(node);
   renderRecentColors();
   contextMenu.hidden = false;
-  const pad = 10;
-  const w = contextMenu.offsetWidth || 260;
-  const h = contextMenu.offsetHeight || 320;
-  contextMenu.style.left = `${Math.min(clientX, window.innerWidth - w - pad)}px`;
-  contextMenu.style.top = `${Math.min(clientY, window.innerHeight - h - pad)}px`;
+  positionFloatingMenu(contextMenu, clientX, clientY, { width: 270, height: 320, pad: 12 });
 }
 
 function renameSelectedPorts() {
