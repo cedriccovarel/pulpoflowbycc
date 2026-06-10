@@ -503,7 +503,7 @@ button.danger { color: var(--danger); border-color: #fecaca; }
   border-radius: 16px;
   box-shadow: 0 18px 50px rgba(15,23,42,.25);
   backdrop-filter: blur(10px);
-  max-height: min(320px, calc(100vh - 80px));
+  max-height: min(360px, calc(100vh - 80px));
   overflow-y: auto;
   overflow-x: hidden;
   overscroll-behavior: contain;
@@ -4249,6 +4249,101 @@ body.mode-planning .node.kind-milestone {
   .toolbar-group.tab-active-v92 .search-count { margin-left: 0 !important; }
 }
 
+
+
+/* v100 - Mapping information */
+.node.kind-infoNode {
+  border-radius: 999px !important;
+  overflow: visible;
+}
+.node.kind-infoNode .node-header {
+  border-radius: 999px 999px 10px 10px;
+  justify-content: center;
+}
+.node.kind-infoNode .node-title { text-align: center; }
+.mapping-widget {
+  height: 100%;
+  min-height: 86px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.info-node-card {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  border-radius: 999px;
+  border: 2px solid rgba(15,23,42,.12);
+  background: radial-gradient(circle at 35% 25%, rgba(255,255,255,.96), rgba(248,250,252,.68));
+  padding: 12px;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.7);
+}
+.info-node-title { font-weight: 950; color: #0f172a; font-size: 14px; line-height: 1.12; }
+.info-node-meta { margin-top: 4px; font-size: 10px; font-weight: 850; color: #64748b; text-transform: uppercase; letter-spacing: .04em; }
+.info-node-value { margin-top: 5px; font-size: 12px; font-weight: 950; color: #4f46e5; }
+.map-canvas {
+  position: relative;
+  min-height: 150px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(248,250,252,.96), rgba(238,242,255,.62));
+  border: 1px solid rgba(148,163,184,.26);
+  overflow: hidden;
+}
+.map-center, .map-bubble {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  border-radius: 999px;
+  padding: 7px;
+  font-size: 10px;
+  font-weight: 950;
+  line-height: 1.08;
+  color: #0f172a;
+  border: 1px solid rgba(15,23,42,.12);
+  box-shadow: 0 10px 24px rgba(15,23,42,.10);
+  overflow: hidden;
+}
+.map-center { width: 62px; height: 62px; left: calc(50% - 31px); top: calc(50% - 31px); background: #111827; color: #fff; }
+.map-bubble { background: #fff; }
+.map-line {
+  position: absolute;
+  height: 2px;
+  transform-origin: left center;
+  background: rgba(79,70,229,.28);
+  border-radius: 99px;
+}
+.map-bubbles-cloud {
+  min-height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 10px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(248,250,252,.96), rgba(240,253,250,.68));
+  border: 1px solid rgba(148,163,184,.24);
+}
+.map-bubble-cloud {
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  border: 1px solid rgba(15,23,42,.12);
+  background: #fff;
+  color: #0f172a;
+  font-size: 10px;
+  line-height: 1.05;
+  font-weight: 950;
+  text-align: center;
+  padding: 8px;
+  box-shadow: 0 10px 22px rgba(15,23,42,.10);
+}
+.map-mini-list { display: grid; gap: 5px; }
+.map-mini-row { display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:11px; font-weight:800; color:#334155; }
+.map-dot { width: 10px; height: 10px; border-radius: 999px; display:inline-block; margin-right: 6px; vertical-align: -1px; }
+
 </style>
 
 
@@ -4287,6 +4382,101 @@ body.mode-planning .node.kind-milestone {
     align-self: stretch !important;
   }
 }
+
+
+/* v100 - Mapping information */
+.node.kind-infoNode {
+  border-radius: 999px !important;
+  overflow: visible;
+}
+.node.kind-infoNode .node-header {
+  border-radius: 999px 999px 10px 10px;
+  justify-content: center;
+}
+.node.kind-infoNode .node-title { text-align: center; }
+.mapping-widget {
+  height: 100%;
+  min-height: 86px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.info-node-card {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  border-radius: 999px;
+  border: 2px solid rgba(15,23,42,.12);
+  background: radial-gradient(circle at 35% 25%, rgba(255,255,255,.96), rgba(248,250,252,.68));
+  padding: 12px;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.7);
+}
+.info-node-title { font-weight: 950; color: #0f172a; font-size: 14px; line-height: 1.12; }
+.info-node-meta { margin-top: 4px; font-size: 10px; font-weight: 850; color: #64748b; text-transform: uppercase; letter-spacing: .04em; }
+.info-node-value { margin-top: 5px; font-size: 12px; font-weight: 950; color: #4f46e5; }
+.map-canvas {
+  position: relative;
+  min-height: 150px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(248,250,252,.96), rgba(238,242,255,.62));
+  border: 1px solid rgba(148,163,184,.26);
+  overflow: hidden;
+}
+.map-center, .map-bubble {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  border-radius: 999px;
+  padding: 7px;
+  font-size: 10px;
+  font-weight: 950;
+  line-height: 1.08;
+  color: #0f172a;
+  border: 1px solid rgba(15,23,42,.12);
+  box-shadow: 0 10px 24px rgba(15,23,42,.10);
+  overflow: hidden;
+}
+.map-center { width: 62px; height: 62px; left: calc(50% - 31px); top: calc(50% - 31px); background: #111827; color: #fff; }
+.map-bubble { background: #fff; }
+.map-line {
+  position: absolute;
+  height: 2px;
+  transform-origin: left center;
+  background: rgba(79,70,229,.28);
+  border-radius: 99px;
+}
+.map-bubbles-cloud {
+  min-height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 10px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(248,250,252,.96), rgba(240,253,250,.68));
+  border: 1px solid rgba(148,163,184,.24);
+}
+.map-bubble-cloud {
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  border: 1px solid rgba(15,23,42,.12);
+  background: #fff;
+  color: #0f172a;
+  font-size: 10px;
+  line-height: 1.05;
+  font-weight: 950;
+  text-align: center;
+  padding: 8px;
+  box-shadow: 0 10px 22px rgba(15,23,42,.10);
+}
+.map-mini-list { display: grid; gap: 5px; }
+.map-mini-row { display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:11px; font-weight:800; color:#334155; }
+.map-dot { width: 10px; height: 10px; border-radius: 999px; display:inline-block; margin-right: 6px; vertical-align: -1px; }
+
 </style>
 
 </head>
@@ -4318,6 +4508,7 @@ body.mode-planning .node.kind-milestone {
         <button type="button" class="toolbar-tab-v92 active" data-tab-target="base">Base</button>
         <button type="button" class="toolbar-tab-v92" data-tab-target="math">Mathématiques</button>
         <button type="button" class="toolbar-tab-v92" data-tab-target="decision">Décision</button>
+        <button type="button" class="toolbar-tab-v92" data-tab-target="mapping">Mapping</button>
         <button type="button" class="toolbar-tab-v92" data-tab-target="sources">Sources</button>
         <button type="button" class="toolbar-tab-v92" data-tab-target="projects">Projets</button>
         <button type="button" class="toolbar-tab-v92" data-tab-target="groups">Groupes</button>
@@ -4385,6 +4576,18 @@ body.mode-planning .node.kind-milestone {
           <div class="tool-icon" draggable="true" data-tool="decisionMemory" title="Mémoire de décisions">🧾</div>
           <div class="tool-icon" draggable="true" data-tool="presentationMode" title="Présentation automatique">▣</div>
           <div class="tool-icon" draggable="true" data-tool="riskOpportunity" title="Risque / opportunité">⚖</div>
+        </div>
+      </section>
+
+
+      <section class="toolbar-group tools-group mapping-group" data-pulpo-tab="mapping">
+        <div class="section-title">Mapping</div>
+        <div class="tool-palette" aria-label="Outils de cartographie d'information">
+          <div class="tool-icon" draggable="true" data-tool="infoNode" title="Nœud d’information">●</div>
+          <div class="tool-icon" draggable="true" data-tool="radialMap" title="Carte radiale">✺</div>
+          <div class="tool-icon" draggable="true" data-tool="bubbleMap" title="Carte bulles">◌</div>
+          <div class="tool-icon" draggable="true" data-tool="mapSummary" title="Synthèse de carte">≡</div>
+          <div class="tool-icon" draggable="true" data-tool="mapLegend" title="Légende automatique">☷</div>
         </div>
       </section>
 
@@ -5057,7 +5260,12 @@ function minNodeSize(node) {
     pieChart: 150,
     radarChart: 170,
     gaugeChart: 98,
-    kpi: 56
+    kpi: 56,
+    infoNode: 86,
+    radialMap: 166,
+    bubbleMap: 166,
+    mapSummary: 126,
+    mapLegend: 118
   }[node.kind || 'box'] ?? 18;
   const minWidth = {
     box: 190,
@@ -5088,7 +5296,12 @@ function minNodeSize(node) {
     pieChart: 260,
     radarChart: 280,
     gaugeChart: 210,
-    kpi: 160
+    kpi: 160,
+    infoNode: 180,
+    radialMap: 320,
+    bubbleMap: 320,
+    mapSummary: 280,
+    mapLegend: 260
   }[node.kind || 'box'] ?? 190;
   const baseMinHeight = node.kind === 'slider' ? 64 : (node.programStyle ? 138 : 82);
   const effectiveHeaderH = node.kind === 'slider' ? 24 : headerH;
@@ -5304,6 +5517,11 @@ function createNode(opts = {}, doSelect = true) {
     decisionMemory: { title: 'Mémoire de décisions', leftPorts: ['Contexte', 'Résultat'], rightPorts: ['Décision'], color: '#fff7ed', width: 330, height: 220, text: 'Décision prise :\nRaison :\nProchaine étape :' },
     presentationMode: { title: 'Présentation automatique', leftPorts: ['KPI', 'Graphique', 'Alerte'], rightPorts: ['Résumé'], color: '#eef2ff', width: 350, height: 240, text: 'Résumé exécutif' },
     riskOpportunity: { title: 'Risque / opportunité', leftPorts: ['A', 'B', 'C'], rightPorts: ['Analyse'], color: '#fff1f2', width: 330, height: 220, text: 'Seuil risque : 50' },
+    infoNode: { title: 'Nœud d’information', leftPorts: ['Valeur'], rightPorts: ['Info'], color: '#eef2ff', width: 210, height: 210, text: 'Type : donnée\nStatut : à vérifier\nImportance : moyenne' },
+    radialMap: { title: 'Carte radiale', leftPorts: ['Info 1', 'Info 2', 'Info 3', 'Info 4'], rightPorts: ['Carte'], color: '#ffffff', width: 360, height: 270, text: 'Sujet central' },
+    bubbleMap: { title: 'Carte bulles', leftPorts: ['Info 1', 'Info 2', 'Info 3', 'Info 4'], rightPorts: ['Carte'], color: '#ffffff', width: 360, height: 270, text: 'Carte bulles' },
+    mapSummary: { title: 'Synthèse de carte', leftPorts: ['Carte', 'Info 1', 'Info 2'], rightPorts: ['Synthèse'], color: '#f8fafc', width: 310, height: 210, text: 'Synthèse mapping' },
+    mapLegend: { title: 'Légende automatique', leftPorts: ['Info 1', 'Info 2', 'Info 3'], rightPorts: ['Légende'], color: '#ffffff', width: 290, height: 200, text: 'Légende de carte' },
     pdf: { title: 'Fichier joint', leftPorts: [], rightPorts: ['Source'], color: '#f8fafc', width: 190, height: 126, fileName: '', fileData: '', fileType: 'application/octet-stream' },
     link: { title: 'Lien internet', leftPorts: [], rightPorts: ['Source'], color: '#ecfeff', width: 190, height: 126, url: '' },
     milestone: { title: 'Jalon', leftPorts: ['Source'], rightPorts: ['Jalon'], color: '#fef3c7', width: 210, height: 142, date: '', week: '', text: 'Commentaire du jalon' }
@@ -5739,7 +5957,7 @@ function displayNodeKind(node) {
 function kindLabel(kind) {
   return ({
     box: 'BOX', panel: 'PANEL', freeText: 'TEXTE', table: 'TABLEAU', slider: 'SLIDER', switch: 'BOOL',
-    add: 'ADD', subtract: 'SUB', multiply: 'MUL', divide: 'DIV', formula: 'FORMULE', average: 'MOY', minimum: 'MIN', maximum: 'MAX', score: 'SCORE', condition: 'SI', filter: 'FILTRE', sumCategory: 'SOMME/CAT', summaryTable: 'RÉSUMÉ', comparator: 'ÉCART', alertNode: 'ALERTE', connectedNote: 'NOTE', barChart: 'BARRES', pieChart: 'CAMEMBERT', radarChart: 'RADAR', gaugeChart: 'JAUGE', kpi: 'KPI', scenarioLiving: 'A/B', hypothesisMode: 'HYP.', traceNode: 'TRACE', stressTest: 'STRESS', inverseGoal: 'CIBLE', diagnosticNode: 'DIAG', decisionCard: 'DÉCISION', autoNote: 'NOTE AUTO', graphChat: 'Q/R', smartZone: 'ZONE', decisionMemory: 'MÉMO', presentationMode: 'PRÉS.', riskOpportunity: 'RISQUE', pdf: 'FICHIER', link: 'LIEN', milestone: 'JALON'
+    add: 'ADD', subtract: 'SUB', multiply: 'MUL', divide: 'DIV', formula: 'FORMULE', average: 'MOY', minimum: 'MIN', maximum: 'MAX', score: 'SCORE', condition: 'SI', filter: 'FILTRE', sumCategory: 'SOMME/CAT', summaryTable: 'RÉSUMÉ', comparator: 'ÉCART', alertNode: 'ALERTE', connectedNote: 'NOTE', barChart: 'BARRES', pieChart: 'CAMEMBERT', radarChart: 'RADAR', gaugeChart: 'JAUGE', kpi: 'KPI', scenarioLiving: 'A/B', hypothesisMode: 'HYP.', traceNode: 'TRACE', stressTest: 'STRESS', inverseGoal: 'CIBLE', diagnosticNode: 'DIAG', decisionCard: 'DÉCISION', autoNote: 'NOTE AUTO', graphChat: 'Q/R', smartZone: 'ZONE', decisionMemory: 'MÉMO', presentationMode: 'PRÉS.', riskOpportunity: 'RISQUE', infoNode: 'INFO', radialMap: 'RADIAL', bubbleMap: 'BULLES', mapSummary: 'SYNTHÈSE', mapLegend: 'LÉGENDE', pdf: 'FICHIER', link: 'LIEN', milestone: 'JALON'
   })[kind || 'box'] || 'BOX';
 }
 
@@ -5791,6 +6009,11 @@ function outputValue(nodeId, visited = new Set()) {
   if (node.kind === 'decisionMemory') return decisionMemoryResult(node, visited).summary;
   if (node.kind === 'presentationMode') return presentationModeResult(node, visited).summary;
   if (node.kind === 'riskOpportunity') return riskOpportunityResult(node, visited).summary;
+  if (node.kind === 'infoNode') return infoNodeResult(node, visited).summary;
+  if (node.kind === 'radialMap') return mapItems(node, visited).map(i => i.label).join(' > ');
+  if (node.kind === 'bubbleMap') return mapItems(node, visited).map(i => i.label).join(', ');
+  if (node.kind === 'mapSummary') return mapSummaryResult(node, visited).summary;
+  if (node.kind === 'mapLegend') return mapLegendResult(node, visited).summary;
   if (node.kind === 'link') return node.url || null;
   return inputValue(node, 0, visited);
 }
@@ -6611,6 +6834,123 @@ function renderRiskOpportunityNode(node, content) {
   content.appendChild(wrap);
 }
 
+function parseInfoMeta(text) {
+  const meta = { type: 'information', status: 'à vérifier', importance: 'moyenne' };
+  String(text || '').split(/\n+/).forEach(line => {
+    const [k, ...rest] = line.split(':');
+    const key = String(k || '').trim().toLowerCase();
+    const val = rest.join(':').trim();
+    if (!val) return;
+    if (key.includes('type')) meta.type = val;
+    if (key.includes('statut')) meta.status = val;
+    if (key.includes('importance')) meta.importance = val;
+  });
+  return meta;
+}
+function colorForInfoType(type) {
+  const t = String(type || '').toLowerCase();
+  if (t.includes('risque')) return '#fecaca';
+  if (t.includes('décision') || t.includes('decision')) return '#bbf7d0';
+  if (t.includes('hyp')) return '#fde68a';
+  if (t.includes('source')) return '#bae6fd';
+  if (t.includes('action')) return '#ddd6fe';
+  if (t.includes('donnée') || t.includes('donnee')) return '#bfdbfe';
+  return '#e5e7eb';
+}
+function infoNodeResult(node, visited = new Set()) {
+  const value = inputValue(node, 0, visited);
+  const meta = parseInfoMeta(node.text);
+  const summary = `${node.title || 'Information'} · ${meta.type} · ${value !== null && value !== undefined ? formatValue(value) : meta.status}`;
+  return { value, meta, summary };
+}
+function renderInfoNode(node, content) {
+  const r = infoNodeResult(node);
+  const wrap = document.createElement('div');
+  wrap.className = 'node-control mapping-widget';
+  const card = document.createElement('div');
+  card.className = 'info-node-card';
+  card.style.borderColor = colorForInfoType(r.meta.type);
+  card.style.background = `radial-gradient(circle at 35% 25%, #fff, ${colorForInfoType(r.meta.type)})`;
+  card.innerHTML = `<div><div class="info-node-title">${escapeHtml(node.title || 'Information')}</div><div class="info-node-meta">${escapeHtml(r.meta.type)} · ${escapeHtml(r.meta.status)} · ${escapeHtml(r.meta.importance)}</div>${r.value !== null && r.value !== undefined ? `<div class="info-node-value">${escapeHtml(formatValue(r.value))}</div>` : ''}</div>`;
+  const ta = document.createElement('textarea');
+  ta.className = 'decision-textarea';
+  ta.value = node.text || '';
+  ta.placeholder = 'Type : donnée\nStatut : à vérifier\nImportance : moyenne';
+  ta.addEventListener('input', () => { node.text = ta.value; });
+  wrap.append(card, ta);
+  content.appendChild(wrap);
+}
+function mapItems(node, visited = new Set()) {
+  const items = decisionInputItems(node, visited).map((item, index) => {
+    const source = item.source;
+    let meta = source && source.kind === 'infoNode' ? infoNodeResult(source, visited).meta : parseInfoMeta(source?.text || '');
+    const numeric = item.value !== null ? item.value : Number(source?.value);
+    const weight = Number.isFinite(numeric) ? Math.max(1, Math.min(100, Math.abs(numeric))) : (String(meta.importance).toLowerCase().includes('fort') ? 80 : String(meta.importance).toLowerCase().includes('faible') ? 30 : 55);
+    return { ...item, label: source?.title || item.label || `Info ${index + 1}`, meta, weight, color: colorForInfoType(meta.type) };
+  });
+  return items;
+}
+function renderRadialMapNode(node, content) {
+  const items = mapItems(node);
+  const wrap = document.createElement('div'); wrap.className = 'node-control mapping-widget';
+  const canvas = document.createElement('div'); canvas.className = 'map-canvas';
+  const center = document.createElement('div'); center.className = 'map-center'; center.textContent = node.text || node.title || 'Sujet'; canvas.appendChild(center);
+  const w = Math.max(260, (node.width || 360) - 34), h = 158;
+  const cx = w/2, cy = h/2, r = Math.min(w,h)/2 - 36;
+  canvas.style.minHeight = h + 'px';
+  items.slice(0,10).forEach((it, i) => {
+    const angle = -Math.PI/2 + Math.PI*2*i/Math.max(1, items.slice(0,10).length);
+    const x = cx + Math.cos(angle)*r, y = cy + Math.sin(angle)*r;
+    const size = 44 + Math.min(34, it.weight/100*34);
+    const line = document.createElement('div'); line.className = 'map-line';
+    const lx = cx, ly = cy; const len = Math.hypot(x-cx, y-cy);
+    line.style.left = `${lx}px`; line.style.top = `${ly}px`; line.style.width = `${len}px`; line.style.transform = `rotate(${Math.atan2(y-cy, x-cx)}rad)`;
+    canvas.appendChild(line);
+    const b = document.createElement('div'); b.className = 'map-bubble'; b.style.width = `${size}px`; b.style.height = `${size}px`; b.style.left = `${x-size/2}px`; b.style.top = `${y-size/2}px`; b.style.background = it.color; b.title = `${it.label} · ${it.meta.type}`; b.textContent = it.label.slice(0, 22); canvas.appendChild(b);
+  });
+  if (!items.length) { const empty = document.createElement('div'); empty.className='chart-empty'; empty.textContent='Connecte des nœuds d’information.'; canvas.appendChild(empty); }
+  wrap.appendChild(canvas); content.appendChild(wrap);
+}
+function renderBubbleMapNode(node, content) {
+  const items = mapItems(node);
+  const wrap = document.createElement('div'); wrap.className = 'node-control mapping-widget';
+  const cloud = document.createElement('div'); cloud.className = 'map-bubbles-cloud';
+  items.slice(0,16).forEach(it => {
+    const size = 42 + Math.min(50, it.weight/100*50);
+    const b = document.createElement('div'); b.className = 'map-bubble-cloud'; b.style.width = `${size}px`; b.style.height = `${size}px`; b.style.background = it.color; b.title = `${it.label} · ${it.meta.type}`; b.textContent = it.label.slice(0, 24); cloud.appendChild(b);
+  });
+  if (!items.length) { const empty = document.createElement('div'); empty.className='chart-empty'; empty.textContent='Connecte des informations pour créer la carte bulles.'; cloud.appendChild(empty); }
+  wrap.appendChild(cloud); content.appendChild(wrap);
+}
+function mapSummaryResult(node, visited = new Set()) {
+  const items = mapItems(node, visited);
+  const byType = {};
+  items.forEach(i => { const k = i.meta.type || 'information'; byType[k] = (byType[k] || 0) + 1; });
+  const risks = items.filter(i => String(i.meta.type).toLowerCase().includes('risque')).length;
+  const pending = items.filter(i => /vérifier|confirmer|hyp/i.test(i.meta.status + ' ' + i.meta.type)).length;
+  const main = items.length ? items.reduce((a,b)=> b.weight > a.weight ? b : a, items[0]) : null;
+  const summary = `${items.length} information(s), ${risks} risque(s), ${pending} à confirmer${main ? ', branche dominante : ' + main.label : ''}.`;
+  return { items, byType, risks, pending, main, summary };
+}
+function renderMapSummaryNode(node, content) {
+  const r = mapSummaryResult(node);
+  const wrap = makeDecisionWrap('Synthèse de carte', `${r.items.length} info(s)`);
+  addDecisionCard(wrap, `<div class="decision-main">${escapeHtml(r.main?.label || 'Carte à alimenter')}</div><div class="decision-muted">${escapeHtml(r.summary)}</div>`);
+  addDecisionCard(wrap, `<div class="decision-list">${Object.entries(r.byType).map(([k,v]) => `<div class="decision-row"><span><i class="map-dot" style="background:${colorForInfoType(k)}"></i>${escapeHtml(k)}</span><strong>${v}</strong></div>`).join('') || '<div class="decision-muted">Connecte une carte ou des nœuds d’information.</div>'}</div>`);
+  content.appendChild(wrap);
+}
+function mapLegendResult(node, visited = new Set()) {
+  const items = mapItems(node, visited);
+  const types = [...new Set(items.map(i => i.meta.type || 'information'))];
+  return { items, types, summary: types.join(', ') || 'Aucune légende' };
+}
+function renderMapLegendNode(node, content) {
+  const r = mapLegendResult(node);
+  const wrap = makeDecisionWrap('Légende automatique', `${r.types.length} type(s)`);
+  addDecisionCard(wrap, `<div class="map-mini-list">${r.types.map(t => `<div class="map-mini-row"><span><i class="map-dot" style="background:${colorForInfoType(t)}"></i>${escapeHtml(t)}</span><strong>${r.items.filter(i=>i.meta.type===t).length}</strong></div>`).join('') || '<div class="decision-muted">Connecte des nœuds pour générer la légende.</div>'}</div>`);
+  content.appendChild(wrap);
+}
+
 function renderActivityTags(node) {
   const container = document.createElement('div');
   container.className = 'activity-tags-block node-control';
@@ -6889,6 +7229,11 @@ function renderNodeContent(node, content) {
   if (node.kind === 'decisionMemory') { renderDecisionMemoryNode(node, content); return; }
   if (node.kind === 'presentationMode') { renderPresentationModeNode(node, content); return; }
   if (node.kind === 'riskOpportunity') { renderRiskOpportunityNode(node, content); return; }
+  if (node.kind === 'infoNode') { renderInfoNode(node, content); return; }
+  if (node.kind === 'radialMap') { renderRadialMapNode(node, content); return; }
+  if (node.kind === 'bubbleMap') { renderBubbleMapNode(node, content); return; }
+  if (node.kind === 'mapSummary') { renderMapSummaryNode(node, content); return; }
+  if (node.kind === 'mapLegend') { renderMapLegendNode(node, content); return; }
   if (node.kind === 'panel') {
     const v = inputValue(node, 0);
     if (v !== null && v !== undefined) {
@@ -7472,7 +7817,7 @@ function showPortMenu(nodeId, portId, side, x, y) {
   disconnectBlock.append(disconnectBtn, sub);
   portMenu.appendChild(disconnectBlock);
 
-  positionFloatingMenu(portMenu, x, y, { width: 350, height: 340, pad: 12 });
+  positionFloatingMenu(portMenu, x, y, { width: 350, height: 360, pad: 12 });
 }
 
 function portContextMenu(nodeId, portId, side) {
@@ -8551,7 +8896,7 @@ function showGroupStyleMenu(clientX, clientY, groupId) {
   if (titleSize) titleSize.value = g.titleFontSize || 12;
   if (commentSize) commentSize.value = g.commentFontSize || 12;
   groupStyleMenu.hidden = false;
-  positionFloatingMenu(groupStyleMenu, clientX, clientY, { width: 270, height: 320, pad: 12 });
+  positionFloatingMenu(groupStyleMenu, clientX, clientY, { width: 270, height: 340, pad: 12 });
 }
 
 function applyGroupStyleMenu() {
@@ -9132,7 +9477,7 @@ function showContextMenu(clientX, clientY, nodeId) {
   if (node.kind === 'freeText') updateTextStyleButtons(node);
   renderRecentColors();
   contextMenu.hidden = false;
-  positionFloatingMenu(contextMenu, clientX, clientY, { width: 270, height: 320, pad: 12 });
+  positionFloatingMenu(contextMenu, clientX, clientY, { width: 270, height: 340, pad: 12 });
 }
 
 function renameSelectedPorts() {
@@ -9393,7 +9738,14 @@ function setupToolPalette() {
       icon.classList.add('dragging');
     });
     icon.addEventListener('dragend', () => icon.classList.remove('dragging'));
-    icon.addEventListener('click', () => setStatus('Glisse cette icône dans l’espace blanc pour l’ajouter.'));
+    icon.addEventListener('click', (evt) => {
+      if (evt.ctrlKey || evt.metaKey) {
+        const r = workspace.getBoundingClientRect();
+        createToolAt(icon.dataset.tool, r.left + r.width / 2, r.top + r.height / 2);
+        return;
+      }
+      setStatus('Glisse cette icône dans l’espace blanc pour l’ajouter. Ctrl/Cmd + clic ajoute l’outil au centre.');
+    });
   });
   workspace.addEventListener('dragover', e => {
     if (e.dataTransfer && Array.from(e.dataTransfer.types || []).includes('text/plain')) {
@@ -9409,7 +9761,7 @@ function setupToolPalette() {
     e.preventDefault();
     workspace.classList.remove('drop-ready');
     const tool = e.dataTransfer?.getData('text/plain');
-    if (!['box', 'panel', 'freeText', 'table', 'slider', 'switch', 'barChart', 'pieChart', 'radarChart', 'gaugeChart', 'kpi', 'add', 'subtract', 'multiply', 'divide', 'formula', 'average', 'minimum', 'maximum', 'score', 'condition', 'filter', 'sumCategory', 'summaryTable', 'comparator', 'alertNode', 'connectedNote', 'scenarioLiving', 'hypothesisMode', 'traceNode', 'stressTest', 'inverseGoal', 'diagnosticNode', 'decisionCard', 'autoNote', 'graphChat', 'smartZone', 'decisionMemory', 'presentationMode', 'riskOpportunity', 'pdf', 'link', 'milestone'].includes(tool)) return;
+    if (!['box', 'panel', 'freeText', 'table', 'slider', 'switch', 'barChart', 'pieChart', 'radarChart', 'gaugeChart', 'kpi', 'add', 'subtract', 'multiply', 'divide', 'formula', 'average', 'minimum', 'maximum', 'score', 'condition', 'filter', 'sumCategory', 'summaryTable', 'comparator', 'alertNode', 'connectedNote', 'scenarioLiving', 'hypothesisMode', 'traceNode', 'stressTest', 'inverseGoal', 'diagnosticNode', 'decisionCard', 'autoNote', 'graphChat', 'smartZone', 'decisionMemory', 'presentationMode', 'riskOpportunity', 'infoNode', 'radialMap', 'bubbleMap', 'mapSummary', 'mapLegend', 'pdf', 'link', 'milestone'].includes(tool)) return;
     createToolAt(tool, e.clientX, e.clientY);
   });
 }
@@ -9895,6 +10247,11 @@ const HELP_TOOL_DESCRIPTIONS_V87 = {
   decisionMemory: 'Sert à garder la mémoire d’une décision. Fonctionne avec un texte éditable et des valeurs de contexte connectées. Exemple : noter “Variante B retenue car meilleur score/coût”.',
   presentationMode: 'Sert à transformer des valeurs en résumé présentable. Fonctionne avec les KPI, graphiques ou alertes connectés. Exemple : préparer une synthèse de réunion.',
   riskOpportunity: 'Sert à classer des éléments en risques ou opportunités. Fonctionne avec un seuil écrit dans l’outil. Exemple : scores sous 50 = risques, au-dessus = opportunités.',
+  infoNode: 'Sert à créer une bulle d’information connectable. Fonctionne avec un titre, un type, un statut, une importance et une valeur amont facultative. Exemple : créer un nœud “Risque structure” de type risque, statut à vérifier.',
+  radialMap: 'Sert à organiser visuellement des informations autour d’un sujet central. Fonctionne avec des nœuds d’information connectés en entrée. Exemple : cartographier coûts, risques, sources et décisions autour d’un projet.',
+  bubbleMap: 'Sert à montrer des groupes d’informations de même niveau sous forme de bulles. Fonctionne avec les nœuds connectés ; la taille suit l’importance ou la valeur. Exemple : comparer visuellement les grands thèmes d’une étude.',
+  mapSummary: 'Sert à résumer une carte d’information. Fonctionne en comptant les types, risques et points à confirmer. Exemple : vérifier qu’une cartographie est complète avant réunion.',
+  mapLegend: 'Sert à générer automatiquement la légende d’une carte. Fonctionne avec les types des nœuds connectés. Exemple : afficher couleur risque / décision / source / hypothèse.',
   pdf: 'Sert à joindre une source documentaire. Fonctionne avec un fichier intégré ou ouvert depuis l’outil. Exemple : associer un plan ou rapport.',
   link: 'Sert à garder une ressource web. Fonctionne avec une URL. Exemple : lien vers un dossier, une carte ou une référence.',
   milestone: 'Sert à marquer une étape. Fonctionne comme jalon daté/commenté. Exemple : rendu APS ou validation client.'
@@ -10463,7 +10820,21 @@ function setupPdfExport() {
 
 try { window.__pulpoTest = { createProject, renameProject, duplicateProject, deleteProject, autoSort, autoLayoutByFamily, distribute, align, save, load, exportFile, importFile, exportExcelConnectionPaths, clearProject }; } catch (e) {}
 
-  </script>
+  
+
+// V101 - Exposition contrôlée pour tests et robustesse des outils Mapping
+try {
+  window.currentProject = currentProject;
+  window.createNode = createNode;
+  window.createToolAt = createToolAt;
+  window.render = render;
+  window.uid = uid;
+  window.HELP_TOOL_DESCRIPTIONS_V87 = HELP_TOOL_DESCRIPTIONS_V87;
+  window.PULPO_MAPPING_TOOLS_V101 = ['infoNode','radialMap','bubbleMap','mapSummary','mapLegend'];
+} catch (err) {
+  console.warn('Pulpo V101 expose skipped', err);
+}
+</script>
 
   <script>
     // v61 - pont d'interaction direct pour le chat IA, indépendant des gestionnaires globaux.
@@ -10868,5 +11239,100 @@ try { window.__pulpoTest = { createProject, renameProject, duplicateProject, del
   .toolbar-group.tab-active-v92 > .section-title { min-width: 100% !important; }
   .toolbar-group.tab-active-v92 .search-count { margin-left: 0 !important; }
 }
+
+
+
+/* v100 - Mapping information */
+.node.kind-infoNode {
+  border-radius: 999px !important;
+  overflow: visible;
+}
+.node.kind-infoNode .node-header {
+  border-radius: 999px 999px 10px 10px;
+  justify-content: center;
+}
+.node.kind-infoNode .node-title { text-align: center; }
+.mapping-widget {
+  height: 100%;
+  min-height: 86px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.info-node-card {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  border-radius: 999px;
+  border: 2px solid rgba(15,23,42,.12);
+  background: radial-gradient(circle at 35% 25%, rgba(255,255,255,.96), rgba(248,250,252,.68));
+  padding: 12px;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.7);
+}
+.info-node-title { font-weight: 950; color: #0f172a; font-size: 14px; line-height: 1.12; }
+.info-node-meta { margin-top: 4px; font-size: 10px; font-weight: 850; color: #64748b; text-transform: uppercase; letter-spacing: .04em; }
+.info-node-value { margin-top: 5px; font-size: 12px; font-weight: 950; color: #4f46e5; }
+.map-canvas {
+  position: relative;
+  min-height: 150px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(248,250,252,.96), rgba(238,242,255,.62));
+  border: 1px solid rgba(148,163,184,.26);
+  overflow: hidden;
+}
+.map-center, .map-bubble {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  border-radius: 999px;
+  padding: 7px;
+  font-size: 10px;
+  font-weight: 950;
+  line-height: 1.08;
+  color: #0f172a;
+  border: 1px solid rgba(15,23,42,.12);
+  box-shadow: 0 10px 24px rgba(15,23,42,.10);
+  overflow: hidden;
+}
+.map-center { width: 62px; height: 62px; left: calc(50% - 31px); top: calc(50% - 31px); background: #111827; color: #fff; }
+.map-bubble { background: #fff; }
+.map-line {
+  position: absolute;
+  height: 2px;
+  transform-origin: left center;
+  background: rgba(79,70,229,.28);
+  border-radius: 99px;
+}
+.map-bubbles-cloud {
+  min-height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 10px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(248,250,252,.96), rgba(240,253,250,.68));
+  border: 1px solid rgba(148,163,184,.24);
+}
+.map-bubble-cloud {
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  border: 1px solid rgba(15,23,42,.12);
+  background: #fff;
+  color: #0f172a;
+  font-size: 10px;
+  line-height: 1.05;
+  font-weight: 950;
+  text-align: center;
+  padding: 8px;
+  box-shadow: 0 10px 22px rgba(15,23,42,.10);
+}
+.map-mini-list { display: grid; gap: 5px; }
+.map-mini-row { display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:11px; font-weight:800; color:#334155; }
+.map-dot { width: 10px; height: 10px; border-radius: 999px; display:inline-block; margin-right: 6px; vertical-align: -1px; }
 
 </style>
