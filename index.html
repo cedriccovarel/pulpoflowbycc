@@ -4479,6 +4479,41 @@ body.mode-planning .node.kind-milestone {
 
 </style>
 
+
+<style id="v102-mapping-drawing-fixes">
+/* V102 - Mapping nodes + Drawing tab */
+.node.kind-infoNode { border-radius: 999px !important; overflow: visible !important; min-width: 170px; min-height: 170px; }
+.node.kind-infoNode .node-header { border-radius: 999px 999px 0 0; justify-content: center; padding-top: 12px; }
+.node.kind-infoNode .node-title { max-width: 120px; text-align: center; }
+.node.kind-infoNode .node-kind { display: none; }
+.node.kind-infoNode .node-content { inset: 42px 22px 18px 22px; padding: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.node.kind-infoNode .mapping-widget { width: 100%; height: 100%; min-height: 0; display: grid; grid-template-rows: 1fr auto; gap: 5px; align-items: stretch; }
+.node.kind-infoNode .info-node-card { width: 100%; min-height: 0; border-radius: 999px; padding: 12px 14px; display: flex; align-items: center; justify-content: center; text-align: center; box-sizing: border-box; overflow: hidden; }
+.node.kind-infoNode .info-node-title { font-size: clamp(11px, calc(var(--node-font-size) + 1px), 18px); line-height: 1.05; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.node.kind-infoNode .info-node-meta { font-size: 9px; line-height: 1.1; margin-top: 4px; opacity: .76; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.node.kind-infoNode .info-node-value { font-size: 11px; margin-top: 3px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.node.kind-infoNode textarea.decision-textarea { min-height: 34px !important; max-height: 48px !important; height: 40px !important; resize: none; font-size: 9px; line-height: 1.15; padding: 5px 7px; border-radius: 10px; overflow: auto; }
+.node.kind-infoNode .ports.left { position: absolute !important; inset: 0 !important; width: 100% !important; height: 100% !important; pointer-events: none; z-index: 9; }
+.node.kind-infoNode .ports.left .port-add { pointer-events: auto; left: 50% !important; bottom: -16px !important; top: auto !important; transform: translateX(-50%) !important; }
+.node.kind-infoNode .info-port-around { position: absolute !important; left: 50% !important; top: 50% !important; width: 30px !important; height: 30px !important; min-height: 0 !important; transform: rotate(var(--info-port-angle)) translate(var(--info-port-radius, 118px)) rotate(calc(-1 * var(--info-port-angle))) !important; transform-origin: center !important; pointer-events: auto; }
+.node.kind-infoNode .info-port-around .port { margin: 0 !important; }
+.node.kind-infoNode .info-port-around .port-label,
+.node.kind-infoNode .info-port-around .port-remove { display: none !important; }
+.node.kind-infoNode .info-port-around:hover .port-label { display: block !important; position: absolute; left: 18px; top: -8px; max-width: 78px; background: #fff; border: 1px solid rgba(15,23,42,.14); border-radius: 7px; padding: 2px 5px; font-size: 10px; box-shadow: 0 8px 18px rgba(15,23,42,.12); }
+.node.kind-drawCircle,
+.node.kind-drawRectangle,
+.node.kind-drawLine,
+.node.kind-drawArrow,
+.node.kind-drawDiamond { background: transparent !important; box-shadow: none; border-color: rgba(15,23,42,.12); }
+.node.kind-drawCircle .node-header,
+.node.kind-drawRectangle .node-header,
+.node.kind-drawLine .node-header,
+.node.kind-drawArrow .node-header,
+.node.kind-drawDiamond .node-header { background: rgba(255,255,255,.75); backdrop-filter: blur(4px); }
+.drawing-widget { width: 100%; height: 100%; min-height: 40px; display: flex; align-items: stretch; justify-content: stretch; pointer-events: none; }
+.drawing-svg { overflow: visible; }
+</style>
+
 </head>
 <body>
   <div id="app">
@@ -4509,6 +4544,7 @@ body.mode-planning .node.kind-milestone {
         <button type="button" class="toolbar-tab-v92" data-tab-target="math">Mathématiques</button>
         <button type="button" class="toolbar-tab-v92" data-tab-target="decision">Décision</button>
         <button type="button" class="toolbar-tab-v92" data-tab-target="mapping">Mapping</button>
+        <button type="button" class="toolbar-tab-v92" data-tab-target="drawing">Dessins</button>
         <button type="button" class="toolbar-tab-v92" data-tab-target="sources">Sources</button>
         <button type="button" class="toolbar-tab-v92" data-tab-target="projects">Projets</button>
         <button type="button" class="toolbar-tab-v92" data-tab-target="groups">Groupes</button>
@@ -4588,6 +4624,17 @@ body.mode-planning .node.kind-milestone {
           <div class="tool-icon" draggable="true" data-tool="bubbleMap" title="Carte bulles">◌</div>
           <div class="tool-icon" draggable="true" data-tool="mapSummary" title="Synthèse de carte">≡</div>
           <div class="tool-icon" draggable="true" data-tool="mapLegend" title="Légende automatique">☷</div>
+        </div>
+      </section>
+
+      <section class="toolbar-group tools-group drawing-group" data-pulpo-tab="drawing">
+        <div class="section-title">Dessins</div>
+        <div class="tool-palette" aria-label="Outils de dessin graphique">
+          <div class="tool-icon" draggable="true" data-tool="drawCircle" title="Dessin rond">●</div>
+          <div class="tool-icon" draggable="true" data-tool="drawRectangle" title="Dessin rectangle">▭</div>
+          <div class="tool-icon" draggable="true" data-tool="drawLine" title="Dessin trait">╱</div>
+          <div class="tool-icon" draggable="true" data-tool="drawArrow" title="Dessin flèche">➜</div>
+          <div class="tool-icon" draggable="true" data-tool="drawDiamond" title="Dessin losange">◆</div>
         </div>
       </section>
 
@@ -4764,6 +4811,15 @@ body.mode-planning .node.kind-milestone {
     </label>
     <label>Couleur
       <input id="ctxColor" type="color" />
+    </label>
+    <label id="ctxDrawingStrokeLabel" hidden>Style de trait
+      <select id="ctxDrawingStroke">
+        <option value="solid">Trait plein</option>
+        <option value="dashed">Pointillé</option>
+        <option value="dotted">Points</option>
+        <option value="thick">Trait épais</option>
+        <option value="thin">Trait fin</option>
+      </select>
     </label>
     <label>Famille
       <select id="ctxFamily">
@@ -5110,6 +5166,8 @@ const contextMenu = document.getElementById('contextMenu');
 const portMenu = document.getElementById('portMenu');
 const ctxName = document.getElementById('ctxName');
 const ctxColor = document.getElementById('ctxColor');
+const ctxDrawingStrokeLabel = document.getElementById('ctxDrawingStrokeLabel');
+const ctxDrawingStroke = document.getElementById('ctxDrawingStroke');
 const ctxFamily = document.getElementById('ctxFamily');
 const ctxFontSize = document.getElementById('ctxFontSize');
 const ctxFormulaLabel = document.getElementById('ctxFormulaLabel');
@@ -5517,11 +5575,16 @@ function createNode(opts = {}, doSelect = true) {
     decisionMemory: { title: 'Mémoire de décisions', leftPorts: ['Contexte', 'Résultat'], rightPorts: ['Décision'], color: '#fff7ed', width: 330, height: 220, text: 'Décision prise :\nRaison :\nProchaine étape :' },
     presentationMode: { title: 'Présentation automatique', leftPorts: ['KPI', 'Graphique', 'Alerte'], rightPorts: ['Résumé'], color: '#eef2ff', width: 350, height: 240, text: 'Résumé exécutif' },
     riskOpportunity: { title: 'Risque / opportunité', leftPorts: ['A', 'B', 'C'], rightPorts: ['Analyse'], color: '#fff1f2', width: 330, height: 220, text: 'Seuil risque : 50' },
-    infoNode: { title: 'Nœud d’information', leftPorts: ['Valeur'], rightPorts: ['Info'], color: '#eef2ff', width: 210, height: 210, text: 'Type : donnée\nStatut : à vérifier\nImportance : moyenne' },
+    infoNode: { title: 'Nœud d’information', leftPorts: ['Info 1','Info 2','Info 3','Info 4','Info 5','Info 6','Info 7','Info 8'], rightPorts: [], color: '#eef2ff', width: 220, height: 220, text: 'Type : donnée\nStatut : à vérifier\nImportance : moyenne' },
     radialMap: { title: 'Carte radiale', leftPorts: ['Info 1', 'Info 2', 'Info 3', 'Info 4'], rightPorts: ['Carte'], color: '#ffffff', width: 360, height: 270, text: 'Sujet central' },
     bubbleMap: { title: 'Carte bulles', leftPorts: ['Info 1', 'Info 2', 'Info 3', 'Info 4'], rightPorts: ['Carte'], color: '#ffffff', width: 360, height: 270, text: 'Carte bulles' },
     mapSummary: { title: 'Synthèse de carte', leftPorts: ['Carte', 'Info 1', 'Info 2'], rightPorts: ['Synthèse'], color: '#f8fafc', width: 310, height: 210, text: 'Synthèse mapping' },
     mapLegend: { title: 'Légende automatique', leftPorts: ['Info 1', 'Info 2', 'Info 3'], rightPorts: ['Légende'], color: '#ffffff', width: 290, height: 200, text: 'Légende de carte' },
+    drawCircle: { title: 'Rond', leftPorts: [], rightPorts: [], color: '#dbeafe', width: 170, height: 170, strokeStyle: 'solid' },
+    drawRectangle: { title: 'Rectangle', leftPorts: [], rightPorts: [], color: '#fef3c7', width: 220, height: 130, strokeStyle: 'solid' },
+    drawLine: { title: 'Trait', leftPorts: [], rightPorts: [], color: '#111827', width: 230, height: 70, strokeStyle: 'solid' },
+    drawArrow: { title: 'Flèche', leftPorts: [], rightPorts: [], color: '#111827', width: 240, height: 80, strokeStyle: 'solid' },
+    drawDiamond: { title: 'Losange', leftPorts: [], rightPorts: [], color: '#dcfce7', width: 170, height: 150, strokeStyle: 'solid' },
     pdf: { title: 'Fichier joint', leftPorts: [], rightPorts: ['Source'], color: '#f8fafc', width: 190, height: 126, fileName: '', fileData: '', fileType: 'application/octet-stream' },
     link: { title: 'Lien internet', leftPorts: [], rightPorts: ['Source'], color: '#ecfeff', width: 190, height: 126, url: '' },
     milestone: { title: 'Jalon', leftPorts: ['Source'], rightPorts: ['Jalon'], color: '#fef3c7', width: 210, height: 142, date: '', week: '', text: 'Commentaire du jalon' }
@@ -5864,6 +5927,8 @@ function renderNode(node, muted) {
   el.style.top = `${node.y}px`;
   el.style.width = `${node.width || 210}px`;
   el.style.height = `${node.height || 112}px`;
+  el.style.setProperty('--node-w', `${node.width || 210}px`);
+  el.style.setProperty('--node-h', `${node.height || 112}px`);
   el.style.background = node.color;
   el.style.setProperty('--node-font-size', `${node.fontSize || 12}px`);
   const nodeTitleEl = el.querySelector('.node-title');
@@ -5919,10 +5984,30 @@ function renderNode(node, muted) {
   });
   const left = el.querySelector('.ports.left');
   const right = el.querySelector('.ports.right');
-  node.leftPorts.forEach(p => left.appendChild(portRow(node, p, 'left')));
-  left.appendChild(portAddButton(node, 'left'));
-  node.rightPorts.forEach(p => right.appendChild(portRow(node, p, 'right')));
-  right.appendChild(portAddButton(node, 'right'));
+  if (isDrawingKind(node.kind)) {
+    left.remove();
+    right.remove();
+  } else if (node.kind === 'infoNode') {
+    el.classList.add('info-node-round-ports');
+    node.rightPorts = [];
+    right.remove();
+    const count = Math.max(1, node.leftPorts.length);
+    const radius = Math.max(82, Math.min(node.width || 220, node.height || 220) / 2 + 8);
+    node.leftPorts.forEach((p, i) => {
+      const row = portRow(node, p, 'left');
+      row.classList.add('info-port-around');
+      const angle = -90 + (360 * i / count);
+      row.style.setProperty('--info-port-angle', angle + 'deg');
+      row.style.setProperty('--info-port-radius', radius + 'px');
+      left.appendChild(row);
+    });
+    left.appendChild(portAddButton(node, 'left'));
+  } else {
+    node.leftPorts.forEach(p => left.appendChild(portRow(node, p, 'left')));
+    left.appendChild(portAddButton(node, 'left'));
+    node.rightPorts.forEach(p => right.appendChild(portRow(node, p, 'right')));
+    right.appendChild(portAddButton(node, 'right'));
+  }
   renderNodeContent(node, el.querySelector('.node-content'));
   if (node.kind === 'freeText') {
     el.title = 'Texte libre : double-clic gauche pour écrire · glisser le texte pour déplacer · clic droit pour le style';
@@ -5957,7 +6042,7 @@ function displayNodeKind(node) {
 function kindLabel(kind) {
   return ({
     box: 'BOX', panel: 'PANEL', freeText: 'TEXTE', table: 'TABLEAU', slider: 'SLIDER', switch: 'BOOL',
-    add: 'ADD', subtract: 'SUB', multiply: 'MUL', divide: 'DIV', formula: 'FORMULE', average: 'MOY', minimum: 'MIN', maximum: 'MAX', score: 'SCORE', condition: 'SI', filter: 'FILTRE', sumCategory: 'SOMME/CAT', summaryTable: 'RÉSUMÉ', comparator: 'ÉCART', alertNode: 'ALERTE', connectedNote: 'NOTE', barChart: 'BARRES', pieChart: 'CAMEMBERT', radarChart: 'RADAR', gaugeChart: 'JAUGE', kpi: 'KPI', scenarioLiving: 'A/B', hypothesisMode: 'HYP.', traceNode: 'TRACE', stressTest: 'STRESS', inverseGoal: 'CIBLE', diagnosticNode: 'DIAG', decisionCard: 'DÉCISION', autoNote: 'NOTE AUTO', graphChat: 'Q/R', smartZone: 'ZONE', decisionMemory: 'MÉMO', presentationMode: 'PRÉS.', riskOpportunity: 'RISQUE', infoNode: 'INFO', radialMap: 'RADIAL', bubbleMap: 'BULLES', mapSummary: 'SYNTHÈSE', mapLegend: 'LÉGENDE', pdf: 'FICHIER', link: 'LIEN', milestone: 'JALON'
+    add: 'ADD', subtract: 'SUB', multiply: 'MUL', divide: 'DIV', formula: 'FORMULE', average: 'MOY', minimum: 'MIN', maximum: 'MAX', score: 'SCORE', condition: 'SI', filter: 'FILTRE', sumCategory: 'SOMME/CAT', summaryTable: 'RÉSUMÉ', comparator: 'ÉCART', alertNode: 'ALERTE', connectedNote: 'NOTE', barChart: 'BARRES', pieChart: 'CAMEMBERT', radarChart: 'RADAR', gaugeChart: 'JAUGE', kpi: 'KPI', scenarioLiving: 'A/B', hypothesisMode: 'HYP.', traceNode: 'TRACE', stressTest: 'STRESS', inverseGoal: 'CIBLE', diagnosticNode: 'DIAG', decisionCard: 'DÉCISION', autoNote: 'NOTE AUTO', graphChat: 'Q/R', smartZone: 'ZONE', decisionMemory: 'MÉMO', presentationMode: 'PRÉS.', riskOpportunity: 'RISQUE', infoNode: 'INFO', radialMap: 'RADIAL', bubbleMap: 'BULLES', mapSummary: 'SYNTHÈSE', mapLegend: 'LÉGENDE', drawCircle: 'ROND', drawRectangle: 'RECTANGLE', drawLine: 'TRAIT', drawArrow: 'FLÈCHE', drawDiamond: 'LOSANGE', pdf: 'FICHIER', link: 'LIEN', milestone: 'JALON'
   })[kind || 'box'] || 'BOX';
 }
 
@@ -5966,6 +6051,9 @@ function isCalculationKind(kind) {
 }
 function isChartKind(kind) {
   return ['barChart', 'pieChart', 'radarChart'].includes(kind);
+}
+function isDrawingKind(kind) {
+  return ['drawCircle','drawRectangle','drawLine','drawArrow','drawDiamond'].includes(kind);
 }
 
 function incomingConnection(nodeId, portId) {
@@ -6014,6 +6102,7 @@ function outputValue(nodeId, visited = new Set()) {
   if (node.kind === 'bubbleMap') return mapItems(node, visited).map(i => i.label).join(', ');
   if (node.kind === 'mapSummary') return mapSummaryResult(node, visited).summary;
   if (node.kind === 'mapLegend') return mapLegendResult(node, visited).summary;
+  if (isDrawingKind(node.kind)) return node.title || kindLabel(node.kind);
   if (node.kind === 'link') return node.url || null;
   return inputValue(node, 0, visited);
 }
@@ -6951,6 +7040,44 @@ function renderMapLegendNode(node, content) {
   content.appendChild(wrap);
 }
 
+function drawStrokeConfig(style) {
+  const key = style || 'solid';
+  if (key === 'dashed') return { width: 4, dash: '10 7' };
+  if (key === 'dotted') return { width: 4, dash: '1 8' };
+  if (key === 'thick') return { width: 8, dash: '' };
+  if (key === 'thin') return { width: 2, dash: '' };
+  return { width: 4, dash: '' };
+}
+function renderDrawingNode(node, content) {
+  const wrap = document.createElement('div');
+  wrap.className = 'node-control drawing-widget';
+  const w = Math.max(80, (node.width || 180) - 28);
+  const h = Math.max(48, (node.height || 120) - 58);
+  const color = node.color || '#111827';
+  const cfg = drawStrokeConfig(node.strokeStyle);
+  const svg = svgEl('svg', { viewBox: `0 0 ${w} ${h}`, width: '100%', height: '100%', class: 'drawing-svg' });
+  const common = { stroke: color, 'stroke-width': cfg.width, fill: 'none', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' };
+  if (cfg.dash) common['stroke-dasharray'] = cfg.dash;
+  if (node.kind === 'drawCircle') {
+    svg.appendChild(svgEl('ellipse', { cx: w/2, cy: h/2, rx: Math.max(10, w/2 - cfg.width), ry: Math.max(10, h/2 - cfg.width), fill: color, opacity: '.22', stroke: color, 'stroke-width': cfg.width, ...(cfg.dash ? {'stroke-dasharray': cfg.dash} : {}) }));
+  } else if (node.kind === 'drawRectangle') {
+    svg.appendChild(svgEl('rect', { x: cfg.width, y: cfg.width, width: Math.max(10, w - cfg.width*2), height: Math.max(10, h - cfg.width*2), rx: 14, fill: color, opacity: '.18', stroke: color, 'stroke-width': cfg.width, ...(cfg.dash ? {'stroke-dasharray': cfg.dash} : {}) }));
+  } else if (node.kind === 'drawDiamond') {
+    const pts = `${w/2},${cfg.width} ${w-cfg.width},${h/2} ${w/2},${h-cfg.width} ${cfg.width},${h/2}`;
+    svg.appendChild(svgEl('polygon', { points: pts, fill: color, opacity: '.20', stroke: color, 'stroke-width': cfg.width, ...(cfg.dash ? {'stroke-dasharray': cfg.dash} : {}) }));
+  } else if (node.kind === 'drawArrow') {
+    svg.appendChild(svgEl('defs', {}));
+    const line = svgEl('line', { x1: 12, y1: h/2, x2: w - 24, y2: h/2, ...common });
+    svg.appendChild(line);
+    const head = svgEl('path', { d: `M ${w-26} ${h/2-14} L ${w-8} ${h/2} L ${w-26} ${h/2+14}`, ...common });
+    svg.appendChild(head);
+  } else {
+    svg.appendChild(svgEl('line', { x1: 12, y1: h-12, x2: w-12, y2: 12, ...common }));
+  }
+  wrap.appendChild(svg);
+  content.appendChild(wrap);
+}
+
 function renderActivityTags(node) {
   const container = document.createElement('div');
   container.className = 'activity-tags-block node-control';
@@ -7234,6 +7361,7 @@ function renderNodeContent(node, content) {
   if (node.kind === 'bubbleMap') { renderBubbleMapNode(node, content); return; }
   if (node.kind === 'mapSummary') { renderMapSummaryNode(node, content); return; }
   if (node.kind === 'mapLegend') { renderMapLegendNode(node, content); return; }
+  if (isDrawingKind(node.kind)) { renderDrawingNode(node, content); return; }
   if (node.kind === 'panel') {
     const v = inputValue(node, 0);
     if (v !== null && v !== undefined) {
@@ -9474,6 +9602,10 @@ function showContextMenu(clientX, clientY, nodeId) {
     ctxFormula.value = node.formula || 'x + y';
   }
   if (ctxFreeTextStyle) ctxFreeTextStyle.hidden = node.kind !== 'freeText';
+  if (ctxDrawingStrokeLabel && ctxDrawingStroke) {
+    ctxDrawingStrokeLabel.hidden = !isDrawingKind(node.kind);
+    ctxDrawingStroke.value = node.strokeStyle || 'solid';
+  }
   if (node.kind === 'freeText') updateTextStyleButtons(node);
   renderRecentColors();
   contextMenu.hidden = false;
@@ -9761,7 +9893,7 @@ function setupToolPalette() {
     e.preventDefault();
     workspace.classList.remove('drop-ready');
     const tool = e.dataTransfer?.getData('text/plain');
-    if (!['box', 'panel', 'freeText', 'table', 'slider', 'switch', 'barChart', 'pieChart', 'radarChart', 'gaugeChart', 'kpi', 'add', 'subtract', 'multiply', 'divide', 'formula', 'average', 'minimum', 'maximum', 'score', 'condition', 'filter', 'sumCategory', 'summaryTable', 'comparator', 'alertNode', 'connectedNote', 'scenarioLiving', 'hypothesisMode', 'traceNode', 'stressTest', 'inverseGoal', 'diagnosticNode', 'decisionCard', 'autoNote', 'graphChat', 'smartZone', 'decisionMemory', 'presentationMode', 'riskOpportunity', 'infoNode', 'radialMap', 'bubbleMap', 'mapSummary', 'mapLegend', 'pdf', 'link', 'milestone'].includes(tool)) return;
+    if (!['box', 'panel', 'freeText', 'table', 'slider', 'switch', 'barChart', 'pieChart', 'radarChart', 'gaugeChart', 'kpi', 'add', 'subtract', 'multiply', 'divide', 'formula', 'average', 'minimum', 'maximum', 'score', 'condition', 'filter', 'sumCategory', 'summaryTable', 'comparator', 'alertNode', 'connectedNote', 'scenarioLiving', 'hypothesisMode', 'traceNode', 'stressTest', 'inverseGoal', 'diagnosticNode', 'decisionCard', 'autoNote', 'graphChat', 'smartZone', 'decisionMemory', 'presentationMode', 'riskOpportunity', 'infoNode', 'radialMap', 'bubbleMap', 'mapSummary', 'mapLegend', 'drawCircle', 'drawRectangle', 'drawLine', 'drawArrow', 'drawDiamond', 'pdf', 'link', 'milestone'].includes(tool)) return;
     createToolAt(tool, e.clientX, e.clientY);
   });
 }
@@ -9787,6 +9919,14 @@ function setupContextMenu() {
     rememberColor(ctxColor.value);
     render();
   });
+  if (ctxDrawingStroke) {
+    ctxDrawingStroke.addEventListener('focus', () => pushHistory());
+    ctxDrawingStroke.addEventListener('change', () => {
+      selectedNodes().forEach(n => { if (isDrawingKind(n.kind)) n.strokeStyle = ctxDrawingStroke.value || 'solid'; });
+      render();
+      setStatus('Style de trait appliqué au dessin.');
+    });
+  }
   if (ctxFamily) {
     ctxFamily.addEventListener('focus', () => pushHistory());
     ctxFamily.addEventListener('change', () => {
@@ -10252,6 +10392,11 @@ const HELP_TOOL_DESCRIPTIONS_V87 = {
   bubbleMap: 'Sert à montrer des groupes d’informations de même niveau sous forme de bulles. Fonctionne avec les nœuds connectés ; la taille suit l’importance ou la valeur. Exemple : comparer visuellement les grands thèmes d’une étude.',
   mapSummary: 'Sert à résumer une carte d’information. Fonctionne en comptant les types, risques et points à confirmer. Exemple : vérifier qu’une cartographie est complète avant réunion.',
   mapLegend: 'Sert à générer automatiquement la légende d’une carte. Fonctionne avec les types des nœuds connectés. Exemple : afficher couleur risque / décision / source / hypothèse.',
+  drawCircle: 'Sert à dessiner un rond ou une bulle graphique libre. Fonctionne sans connecteur : redimensionne-le, change sa couleur et son style de trait au clic droit. Exemple : entourer une zone importante dans une carte.',
+  drawRectangle: 'Sert à dessiner un rectangle ou un encadré. Fonctionne sans connecteur : redimensionne-le et règle couleur/trait. Exemple : encadrer un groupe d’informations.',
+  drawLine: 'Sert à dessiner un trait de séparation ou d’annotation. Fonctionne sans connecteur : redimensionne-le et règle couleur/pointillés. Exemple : séparer deux zones de lecture.',
+  drawArrow: 'Sert à dessiner une flèche graphique. Fonctionne sans connecteur : redimensionne-la et règle couleur/trait. Exemple : indiquer le sens de lecture du schéma.',
+  drawDiamond: 'Sert à dessiner un losange graphique. Fonctionne sans connecteur : redimensionne-le et stylise son trait. Exemple : marquer une décision ou un point de bascule.',
   pdf: 'Sert à joindre une source documentaire. Fonctionne avec un fichier intégré ou ouvert depuis l’outil. Exemple : associer un plan ou rapport.',
   link: 'Sert à garder une ressource web. Fonctionne avec une URL. Exemple : lien vers un dossier, une carte ou une référence.',
   milestone: 'Sert à marquer une étape. Fonctionne comme jalon daté/commenté. Exemple : rendu APS ou validation client.'
