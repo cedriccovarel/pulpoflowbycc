@@ -1963,16 +1963,16 @@ button:hover { box-shadow: 0 8px 18px rgba(15,23,42,.10); }
   flex: 1 1 auto;
 }
 .group-box {
-  border-color: color-mix(in srgb, var(--group-color, #dbeafe) 55%, #2563eb);
-  background: color-mix(in srgb, var(--group-color, #dbeafe) 42%, transparent);
+  border-color: rgba(37,99,235,.38);
+  background: rgba(219,234,254,.42);
 }
 .group-title {
-  background: color-mix(in srgb, var(--group-color, #dbeafe) 70%, white);
-  border-color: color-mix(in srgb, var(--group-color, #dbeafe) 58%, #2563eb);
+  background: rgba(239,246,255,.92);
+  border-color: rgba(37,99,235,.42);
   font-size: var(--group-title-size, 12px);
 }
 .group-comment {
-  background: color-mix(in srgb, var(--group-color, #dbeafe) 42%, white);
+  background: rgba(239,246,255,.86);
   font-size: var(--group-comment-size, 12px);
 }
 
@@ -2270,7 +2270,7 @@ body.mode-audit .node.audit-issue::after {
 }
 .group-box-child {
   border-style: dashed;
-  background: color-mix(in srgb, var(--group-color) 48%, transparent);
+  background: rgba(219,234,254,.48);
 }
 .group-box-child .group-title::before {
   content: "↳ ";
@@ -3585,7 +3585,7 @@ body.mode-planning .node.kind-milestone {
   height: 6px;
   transform: translateX(-50%);
   border-radius: 999px;
-  background: color-mix(in srgb, var(--group-color, #dbeafe) 62%, #0f172a 38%);
+  background: rgba(30,64,175,.82);
   box-shadow: 0 2px 8px rgba(15, 23, 42, .16);
   opacity: .95;
   pointer-events: none;
@@ -3595,7 +3595,7 @@ body.mode-planning .node.kind-milestone {
   height: 10px;
   width: 56%;
   opacity: 1;
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--group-color, #dbeafe) 46%, transparent), 0 7px 16px rgba(15, 23, 42, .20);
+  box-shadow: 0 0 0 4px rgba(147,197,253,.42), 0 7px 16px rgba(15, 23, 42, .20);
 }
 
 /* v78 - diagrammes et option Programme */
@@ -4345,6 +4345,9 @@ body.mode-planning .node.kind-milestone {
 .map-dot { width: 10px; height: 10px; border-radius: 999px; display:inline-block; margin-right: 6px; vertical-align: -1px; }
 
 
+
+
+/* v109 - html2canvas safe colors: avoid CSS color()/color-mix() parse errors */
 /* v108 - PNG export options */
 .png-export-card { max-width: 520px; }
 .png-export-options { display: grid; gap: 8px; margin: 12px 0; }
@@ -10011,6 +10014,62 @@ async function ensureHtml2Canvas() {
   return window.__pulpoHtml2CanvasPromise;
 }
 
+
+function pulpoCanvasFallbackColor(prop, value) {
+  const p = String(prop || '').toLowerCase();
+  if (p.includes('shadow')) return 'none';
+  if (p.includes('background')) return 'transparent';
+  if (p.includes('border') || p.includes('outline') || p.includes('stroke')) return '#cbd5e1';
+  if (p.includes('fill')) return 'currentColor';
+  return '#0f172a';
+}
+
+function pulpoIsUnsupportedCanvasColor(value) {
+  return typeof value === 'string' && /(?:color\(|color-mix\(|oklch\(|lab\(|lch\()/i.test(value);
+}
+
+function sanitizeHtml2CanvasClone(doc) {
+  const win = doc.defaultView || window;
+  const props = [
+    'color', 'backgroundColor',
+    'borderTopColor', 'borderRightColor', 'borderBottomColor', 'borderLeftColor',
+    'outlineColor', 'boxShadow', 'textDecorationColor', 'fill', 'stroke'
+  ];
+  doc.querySelectorAll('*').forEach(el => {
+    let cs;
+    try { cs = win.getComputedStyle(el); } catch (err) { return; }
+    props.forEach(prop => {
+      let value = '';
+      try { value = cs.getPropertyValue(prop.replace(/[A-Z]/g, m => '-' + m.toLowerCase())) || cs[prop] || ''; } catch (err) { value = ''; }
+      if (pulpoIsUnsupportedCanvasColor(value)) {
+        try { el.style[prop] = pulpoCanvasFallbackColor(prop, value); } catch (err) {}
+      }
+    });
+    const style = el.getAttribute('style') || '';
+    if (pulpoIsUnsupportedCanvasColor(style)) {
+      el.setAttribute('style', style
+        .replace(/color-mix\([^;]+\)/gi, '#cbd5e1')
+        .replace(/color\([^;]+\)/gi, '#0f172a')
+        .replace(/oklch\([^;]+\)/gi, '#0f172a')
+        .replace(/lab\([^;]+\)/gi, '#0f172a')
+        .replace(/lch\([^;]+\)/gi, '#0f172a'));
+    }
+  });
+  // Remove selection overlays and context menus in the cloned document too.
+  doc.querySelectorAll('.selection-rect, .context-menu, .port-menu, .modal:not([hidden])').forEach(el => el.remove());
+}
+
+function html2canvasSafeOptions(extra = {}) {
+  const previousOnclone = extra.onclone;
+  return {
+    ...extra,
+    onclone: (doc, element) => {
+      sanitizeHtml2CanvasClone(doc);
+      if (typeof previousOnclone === 'function') previousOnclone(doc, element);
+    }
+  };
+}
+
 function downloadDataUrl(dataUrl, filename) {
   const a = document.createElement('a');
   a.href = dataUrl;
@@ -10067,20 +10126,21 @@ function closePngExportModal(evt) {
 async function captureViewportAsImage() {
   await ensureHtml2Canvas();
   await nextFrame();
-  const rendered = await window.html2canvas(workspace, {
+  const rendered = await window.html2canvas(workspace, html2canvasSafeOptions({
     backgroundColor: '#ffffff',
     scale: Math.min(2, window.devicePixelRatio || 1.5),
     useCORS: true,
     logging: false,
     ignoreElements: el => el?.classList?.contains('selection-rect') || el?.classList?.contains('context-menu') || el?.classList?.contains('port-menu')
-  });
+  }));
   return { dataUrl: rendered.toDataURL('image/png'), width: rendered.width, height: rendered.height };
 }
 
 async function renderStageToPng(stage) {
   await ensureHtml2Canvas();
   await nextFrame();
-  const rendered = await window.html2canvas(stage, { backgroundColor: '#ffffff', scale: 2, useCORS: true, logging: false });
+  sanitizeHtml2CanvasClone(document);
+  const rendered = await window.html2canvas(stage, html2canvasSafeOptions({ backgroundColor: '#ffffff', scale: 2, useCORS: true, logging: false }));
   return { dataUrl: rendered.toDataURL('image/png'), width: rendered.width, height: rendered.height };
 }
 
