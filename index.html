@@ -4344,6 +4344,12 @@ body.mode-planning .node.kind-milestone {
 .map-mini-row { display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:11px; font-weight:800; color:#334155; }
 .map-dot { width: 10px; height: 10px; border-radius: 999px; display:inline-block; margin-right: 6px; vertical-align: -1px; }
 
+
+/* v108 - PNG export options */
+.png-export-card { max-width: 520px; }
+.png-export-options { display: grid; gap: 8px; margin: 12px 0; }
+.png-export-card select, .png-export-card input[type="text"] { width: 100%; }
+
 </style>
 
 
@@ -4994,6 +5000,49 @@ body.mode-planning .node.kind-milestone {
 .node.kind-infoNode > .ports.right .port-add { left: calc(50% + 20px) !important; right: auto !important; transform: none !important; }
 </style>
 
+
+<style id="v107-info-node-single-hidden-output">
+/* V107 - Sortie centrale invisible du noeud d'information */
+.node.kind-infoNode.info-node-single-hidden-output > .ports.right .info-node-center-output {
+  left: 50% !important;
+  top: 50% !important;
+  width: 118px !important;
+  height: 118px !important;
+  transform: translate(-50%, -50%) !important;
+  z-index: 34 !important;
+  cursor: crosshair !important;
+  background: transparent !important;
+}
+.node.kind-infoNode.info-node-single-hidden-output > .ports.right .info-node-center-output .port {
+  width: 112px !important;
+  height: 112px !important;
+  border-radius: 999px !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  background: rgba(17,24,39,0.001) !important;
+  opacity: 0.001 !important;
+}
+.node.kind-infoNode.info-node-single-hidden-output > .ports.right .info-node-center-output .port-label,
+.node.kind-infoNode.info-node-single-hidden-output > .ports.right .info-node-center-output .port-remove {
+  display: none !important;
+}
+.node.kind-infoNode.info-node-single-hidden-output > .ports.right .port-add {
+  display: none !important;
+}
+.node.kind-infoNode.info-node-single-hidden-output .node-content {
+  left: 14% !important;
+  right: 14% !important;
+  top: 14% !important;
+  bottom: 14% !important;
+}
+.node.kind-infoNode.info-node-single-hidden-output .info-node-card {
+  max-height: none !important;
+  padding: 12px 14px !important;
+}
+.node.kind-infoNode.info-node-single-hidden-output textarea.decision-textarea {
+  min-height: 82px !important;
+}
+</style>
 </head>
 <body>
   <div id="app">
@@ -5175,7 +5224,7 @@ body.mode-planning .node.kind-milestone {
           <button id="importBtn" title="Importer un fichier .json" aria-label="Importer un fichier JSON">⬆</button>
           <button id="exportExcelPathsBtn" title="Bêta : exporter les chemins de connexion vers Excel" aria-label="Exporter les chemins vers Excel">📊</button>
           <button id="exportPdfBtn" title="Exporter en PDF" aria-label="Exporter en PDF" onclick="window.openPdfExportModal && window.openPdfExportModal(event)">📄</button>
-          <button id="exportPngBtn" title="Exporter la zone de travail en PNG" aria-label="Exporter en PNG">🖼️</button>
+          <button id="exportPngBtn" title="Exporter PNG : vue écran, graphe global ou groupe nommé" aria-label="Exporter en PNG">🖼️</button>
         </div>
         <input id="importFileInput" type="file" accept="application/json,.json" hidden />
         <input id="excelFileInput" type="file" accept=".xlsx,.xls,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,text/csv" hidden />
@@ -5584,6 +5633,33 @@ body.mode-planning .node.kind-milestone {
       <div class="modal-actions">
         <button id="pdfExportCancelBtn" type="button" onclick="window.closePdfExportModal && window.closePdfExportModal(event)">Annuler</button>
         <button id="pdfExportRunBtn" type="button" class="primary" onclick="window.runPdfExport && window.runPdfExport(event)">Exporter le PDF</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="pngExportModal" class="modal-backdrop" hidden>
+    <div class="modal-card png-export-card">
+      <div class="modal-header">
+        <h2>Exporter en PNG</h2>
+        <button id="pngExportCloseBtn" class="icon-button" title="Fermer" type="button" onclick="window.closePngExportModal && window.closePngExportModal(event)">×</button>
+      </div>
+      <p class="modal-help">Choisis ce que tu veux exporter en image PNG.</p>
+      <div class="pdf-export-options png-export-options">
+        <label class="pdf-option"><input type="radio" name="pngExportMode" value="viewport" checked /> Vue écran actuelle</label>
+        <label class="pdf-option"><input type="radio" name="pngExportMode" value="full" /> Graphe global complet</label>
+        <label class="pdf-option"><input type="radio" name="pngExportMode" value="group" /> Groupe nommé</label>
+      </div>
+      <div id="pngGroupPanel" class="pdf-export-settings" hidden>
+        <label>Groupe à exporter
+          <select id="pngGroupSelect"><option value="">Choisir un groupe…</option></select>
+        </label>
+      </div>
+      <label class="pdf-file-label">Nom du fichier
+        <input id="pngFilenameInput" type="text" value="pulpo-export" placeholder="Nom du PNG" />
+      </label>
+      <div class="modal-actions">
+        <button id="pngExportCancelBtn" type="button" onclick="window.closePngExportModal && window.closePngExportModal(event)">Annuler</button>
+        <button id="pngExportRunBtn" type="button" class="primary" onclick="window.runPngExport && window.runPngExport(event)">Exporter le PNG</button>
       </div>
     </div>
   </div>
@@ -6061,7 +6137,7 @@ function createNode(opts = {}, doSelect = true) {
     decisionMemory: { title: 'Mémoire de décisions', leftPorts: ['Contexte', 'Résultat'], rightPorts: ['Décision'], color: '#fff7ed', width: 330, height: 220, text: 'Décision prise :\nRaison :\nProchaine étape :' },
     presentationMode: { title: 'Présentation automatique', leftPorts: ['KPI', 'Graphique', 'Alerte'], rightPorts: ['Résumé'], color: '#eef2ff', width: 350, height: 240, text: 'Résumé exécutif' },
     riskOpportunity: { title: 'Risque / opportunité', leftPorts: ['A', 'B', 'C'], rightPorts: ['Analyse'], color: '#fff1f2', width: 330, height: 220, text: 'Seuil risque : 50' },
-    infoNode: { title: 'Nœud d’information', leftPorts: ['Valeur'], rightPorts: ['Sortie 1','Sortie 2','Sortie 3','Sortie 4','Sortie 5','Sortie 6'], color: '#eef2ff', width: 280, height: 280, text: 'Type : donnée\nStatut : à vérifier\nImportance : moyenne' },
+    infoNode: { title: 'Nœud d’information', leftPorts: ['Valeur'], rightPorts: ['Sortie centrale'], color: '#eef2ff', width: 280, height: 280, text: 'Type : donnée\nStatut : à vérifier\nImportance : moyenne' },
     radialMap: { title: 'Carte radiale', leftPorts: ['Info 1', 'Info 2', 'Info 3', 'Info 4'], rightPorts: ['Carte'], color: '#ffffff', width: 360, height: 270, text: 'Sujet central' },
     bubbleMap: { title: 'Carte bulles', leftPorts: ['Info 1', 'Info 2', 'Info 3', 'Info 4'], rightPorts: ['Carte'], color: '#ffffff', width: 360, height: 270, text: 'Carte bulles' },
     mapSummary: { title: 'Synthèse de carte', leftPorts: ['Carte', 'Info 1', 'Info 2'], rightPorts: ['Synthèse'], color: '#f8fafc', width: 310, height: 210, text: 'Synthèse mapping' },
@@ -6478,11 +6554,24 @@ function renderNode(node, muted) {
   const left = el.querySelector('.ports.left');
   const right = el.querySelector('.ports.right');
   if (node.kind === 'infoNode') {
-    el.classList.add('info-node-round-ports');
-    // Les conteneurs de ports sont déplacés au niveau du noeud complet.
-    // Sinon, ils se calent sur le corps interne et finissent visuellement décalés.
+    el.classList.add('info-node-round-ports', 'info-node-single-hidden-output');
+    // V107 : le noeud d'information garde ses entrées en périphérie,
+    // mais n'a plus qu'une seule sortie centrale invisible et large.
+    // Cela supprime définitivement les soucis de ports éparpillés autour du rond.
     el.appendChild(left);
     el.appendChild(right);
+    if (!Array.isArray(node.leftPorts) || !node.leftPorts.length) {
+      node.leftPorts = [{ id: uid('port'), label: 'Valeur', connectionStyle: '' }];
+    }
+    if (!Array.isArray(node.rightPorts) || !node.rightPorts.length) {
+      node.rightPorts = [{ id: uid('port'), label: 'Sortie centrale', connectionStyle: '' }];
+    } else if (node.rightPorts.length !== 1) {
+      const keep = node.rightPorts[0];
+      keep.label = keep.label || 'Sortie centrale';
+      node.rightPorts = [keep];
+    } else {
+      node.rightPorts[0].label = node.rightPorts[0].label || 'Sortie centrale';
+    }
     const nodeW = Number(node.width) || 280;
     const nodeH = Number(node.height) || nodeW;
     const cx = nodeW / 2;
@@ -6501,7 +6590,7 @@ function renderNode(node, muted) {
       if (count <= 1) return [(startDeg + endDeg) / 2];
       return Array.from({ length: count }, (_, i) => startDeg + ((endDeg - startDeg) * i / (count - 1)));
     };
-    const inputAngles = node.leftPorts.length === 1 ? [180] : spreadAngles(node.leftPorts.length, 220, 140);
+    const inputAngles = node.leftPorts.length === 1 ? [180] : spreadAngles(node.leftPorts.length, 225, 135);
     node.leftPorts.forEach((p, i) => {
       const row = portRow(node, p, 'left');
       row.classList.add('info-port-around', 'info-port-input-around');
@@ -6509,16 +6598,14 @@ function renderNode(node, muted) {
       left.appendChild(row);
     });
     left.appendChild(portAddButton(node, 'left'));
-    const defaultOutputAngles = [-90, -30, 30, 90, 135, -135];
-    const dynamicOutputAngles = spreadAngles(Math.max(1, node.rightPorts.length), -120, 120);
-    node.rightPorts.forEach((p, i) => {
-      const row = portRow(node, p, 'right');
-      row.classList.add('info-port-around', 'info-port-output-around');
-      const angle = defaultOutputAngles[i] !== undefined ? defaultOutputAngles[i] : dynamicOutputAngles[i];
-      setInfoPortAtAngle(row, angle);
-      right.appendChild(row);
-    });
-    right.appendChild(portAddButton(node, 'right'));
+    const out = node.rightPorts[0];
+    const outRow = portRow(node, out, 'right');
+    outRow.classList.add('info-port-around', 'info-port-output-around', 'info-node-center-output');
+    outRow.style.setProperty('--info-port-x-px', cx.toFixed(2) + 'px');
+    outRow.style.setProperty('--info-port-y-px', cy.toFixed(2) + 'px');
+    outRow.title = 'Sortie centrale invisible : glisse depuis le centre du nœud pour connecter';
+    right.appendChild(outRow);
+    // Pas de bouton + en sortie : le noeud n'a volontairement qu'une sortie centrale.
   } else {
     node.leftPorts.forEach(p => left.appendChild(portRow(node, p, 'left')));
     left.appendChild(portAddButton(node, 'left'));
@@ -9901,24 +9988,158 @@ function exportExcelConnectionPaths() {
 }
 
 
-async function exportWorkspacePng() {
+function safeExportBaseName(raw, fallback = 'pulpo-export') {
+  return String(raw || fallback)
+    .trim()
+    .replace(/\.[a-z0-9]+$/i, '')
+    .replace(/[\/:*?"<>|]+/g, '-')
+    .replace(/\s+/g, ' ')
+    .slice(0, 120) || fallback;
+}
+
+async function ensureHtml2Canvas() {
+  if (window.html2canvas) return window.html2canvas;
+  if (window.__pulpoHtml2CanvasPromise) return window.__pulpoHtml2CanvasPromise;
+  window.__pulpoHtml2CanvasPromise = new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+    script.async = true;
+    script.onload = () => window.html2canvas ? resolve(window.html2canvas) : reject(new Error('html2canvas indisponible'));
+    script.onerror = () => reject(new Error('Impossible de charger html2canvas'));
+    document.head.appendChild(script);
+  });
+  return window.__pulpoHtml2CanvasPromise;
+}
+
+function downloadDataUrl(dataUrl, filename) {
+  const a = document.createElement('a');
+  a.href = dataUrl;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+function pngFilenameSuffix() {
+  return new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-');
+}
+
+function renderPngGroupSelect() {
+  const select = document.getElementById('pngGroupSelect');
+  if (!select) return;
+  const groups = currentProject().groups || [];
+  select.innerHTML = '<option value="">Choisir un groupe…</option>';
+  groups.forEach(g => {
+    const option = document.createElement('option');
+    option.value = g.id;
+    option.textContent = g.title || 'Groupe sans nom';
+    select.appendChild(option);
+  });
+}
+
+function updatePngExportModeUI() {
+  const mode = document.querySelector('input[name="pngExportMode"]:checked')?.value || 'viewport';
+  const panel = document.getElementById('pngGroupPanel');
+  if (panel) panel.hidden = mode !== 'group';
+}
+
+function openPngExportModal(evt) {
+  evt?.preventDefault?.();
+  evt?.stopPropagation?.();
+  const modal = document.getElementById('pngExportModal');
+  if (!modal) return;
+  renderPngGroupSelect();
+  document.querySelectorAll('input[name="pngExportMode"]').forEach((input, idx) => { input.checked = idx === 0; });
+  updatePngExportModeUI();
+  const nameField = document.getElementById('pngFilenameInput');
+  if (nameField) nameField.value = safeExportBaseName(currentProject().title || 'pulpo-export');
+  modal.hidden = false;
+  setTimeout(() => nameField?.select(), 40);
+}
+
+function closePngExportModal(evt) {
+  evt?.preventDefault?.();
+  evt?.stopPropagation?.();
+  const modal = document.getElementById('pngExportModal');
+  if (modal) modal.hidden = true;
+}
+
+async function captureViewportAsImage() {
+  await ensureHtml2Canvas();
+  await nextFrame();
+  const rendered = await window.html2canvas(workspace, {
+    backgroundColor: '#ffffff',
+    scale: Math.min(2, window.devicePixelRatio || 1.5),
+    useCORS: true,
+    logging: false,
+    ignoreElements: el => el?.classList?.contains('selection-rect') || el?.classList?.contains('context-menu') || el?.classList?.contains('port-menu')
+  });
+  return { dataUrl: rendered.toDataURL('image/png'), width: rendered.width, height: rendered.height };
+}
+
+async function renderStageToPng(stage) {
+  await ensureHtml2Canvas();
+  await nextFrame();
+  const rendered = await window.html2canvas(stage, { backgroundColor: '#ffffff', scale: 2, useCORS: true, logging: false });
+  return { dataUrl: rendered.toDataURL('image/png'), width: rendered.width, height: rendered.height };
+}
+
+async function captureCurrentDiagramAsImageV108(groupId = null) {
+  const previousFocus = state.focusedGroupId;
   try {
-    if (!window.html2canvas) return alert('L’export PNG a besoin de html2canvas. Vérifie la connexion internet et recharge la page.');
-    const shot = await captureCurrentDiagramAsImage(null);
-    const safeDate = new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-');
-    const base = String(currentProject()?.title || 'pulpo').replace(/[\/:*?"<>|]+/g, '-').slice(0, 80) || 'pulpo';
-    const a = document.createElement('a');
-    a.href = shot.dataUrl;
-    a.download = `${base}-${safeDate}.png`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    setStatus('Export PNG généré.');
-  } catch (err) {
-    console.error(err);
-    alert('Impossible d’exporter le PNG.');
+    state.focusedGroupId = groupId || null;
+    render();
+    await nextFrame();
+    const bounds = groupId ? groupBounds(groupId) : projectBoundsAll();
+    if (!bounds) throw new Error(groupId ? 'Ce groupe ne contient aucun outil exportable.' : 'Aucun contenu à exporter.');
+    const stage = buildExportScene(bounds);
+    await nextFrame();
+    const shot = await renderStageToPng(stage);
+    stage.remove();
+    return { ...shot, bounds };
+  } finally {
+    state.focusedGroupId = previousFocus || null;
+    render();
   }
 }
+
+async function runPngExport(evt) {
+  evt?.preventDefault?.();
+  evt?.stopPropagation?.();
+  const mode = document.querySelector('input[name="pngExportMode"]:checked')?.value || 'viewport';
+  const base = safeExportBaseName(document.getElementById('pngFilenameInput')?.value || currentProject().title || 'pulpo-export');
+  let shot;
+  let label = 'vue-ecran';
+  try {
+    if (mode === 'viewport') {
+      shot = await captureViewportAsImage();
+      label = 'vue-ecran';
+    } else if (mode === 'group') {
+      const groupId = document.getElementById('pngGroupSelect')?.value || '';
+      const group = currentProject().groups.find(g => g.id === groupId);
+      if (!groupId || !group) return alert('Choisis un groupe nommé à exporter.');
+      shot = await captureCurrentDiagramAsImageV108(groupId);
+      label = safeExportBaseName(group.title || 'groupe', 'groupe');
+    } else {
+      shot = await captureCurrentDiagramAsImageV108(null);
+      label = 'graphe-global';
+    }
+    downloadDataUrl(shot.dataUrl, `${base}-${label}-${pngFilenameSuffix()}.png`);
+    closePngExportModal(evt);
+    setStatus(`Export PNG généré : ${label}.`);
+  } catch (err) {
+    console.error(err);
+    alert(err?.message || 'Impossible d’exporter le PNG. Vérifie que le contenu existe et recharge la page.');
+  }
+}
+
+async function exportWorkspacePng(evt) {
+  openPngExportModal(evt);
+}
+
+window.openPngExportModal = openPngExportModal;
+window.closePngExportModal = closePngExportModal;
+window.runPngExport = runPngExport;
 
 async function exportFile() {
   const data = serializableState();
@@ -10522,7 +10743,7 @@ function setupContextMenu() {
   document.getElementById('ctxAddRight')?.addEventListener('click', e => {
     e.preventDefault();
     pushHistory();
-    selectedNodes().forEach(n => n.rightPorts.push({ id: uid('port'), label: `Sortie ${n.rightPorts.length + 1}`, connectionStyle: '' }));
+    selectedNodes().forEach(n => { if (n.kind === 'infoNode') { if (!n.rightPorts || !n.rightPorts.length) n.rightPorts = [{ id: uid('port'), label: 'Sortie centrale', connectionStyle: '' }]; else n.rightPorts = [n.rightPorts[0]]; } else n.rightPorts.push({ id: uid('port'), label: `Sortie ${n.rightPorts.length + 1}`, connectionStyle: '' }); });
     render();
   });
   document.getElementById('ctxRenamePorts')?.addEventListener('click', e => { e.preventDefault(); renameSelectedPorts(); });
@@ -11034,6 +11255,16 @@ function setupCoreToolbarButtons() {
   bind('importBtn', () => document.getElementById('importFileInput')?.click());
   bind('exportExcelPathsBtn', exportExcelConnectionPaths);
   bind('exportPngBtn', exportWorkspacePng);
+  document.querySelectorAll('input[name="pngExportMode"]').forEach(input => {
+    if (input.dataset.pulpoBound === '1') return;
+    input.dataset.pulpoBound = '1';
+    input.addEventListener('change', updatePngExportModeUI);
+  });
+  const pngModal = document.getElementById('pngExportModal');
+  if (pngModal && pngModal.dataset.pulpoBound !== '1') {
+    pngModal.dataset.pulpoBound = '1';
+    pngModal.addEventListener('pointerdown', e => { if (e.target?.id === 'pngExportModal') closePngExportModal(e); });
+  }
   bind('clearBtn', clearProject);
 
   document.querySelectorAll('[data-align]').forEach(btn => {
@@ -11226,9 +11457,9 @@ async function captureCurrentDiagramAsImage(groupId = null) {
     if (!bounds) throw new Error('Aucun contenu à exporter.');
     const stage = buildExportScene(bounds);
     await nextFrame();
-    const rendered = await window.html2canvas(stage, { backgroundColor: '#ffffff', scale: 2, useCORS: true, logging: false });
+    const shot = await renderStageToPng(stage);
     stage.remove();
-    return { dataUrl: rendered.toDataURL('image/png'), width: rendered.width, height: rendered.height, bounds };
+    return { ...shot, bounds };
   } finally {
     state.focusedGroupId = previousFocus || null;
     render();
@@ -11248,9 +11479,9 @@ async function captureSelectionAsImage() {
     .map(c => c.id);
   const stage = buildExportScene(bounds, { nodeIds: selected, connectionIds, includeGroups: false });
   await nextFrame();
-  const rendered = await window.html2canvas(stage, { backgroundColor: '#ffffff', scale: 2, useCORS: true, logging: false });
+  const shot = await renderStageToPng(stage);
   stage.remove();
-  return { dataUrl: rendered.toDataURL('image/png'), width: rendered.width, height: rendered.height, bounds };
+  return { ...shot, bounds };
 }
 
 function fitRect(srcW, srcH, boxW, boxH) {
