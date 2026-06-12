@@ -12539,6 +12539,178 @@ try {
   window.activateToolbarTabV92 = activateToolbarTab;
 })();
 </script>
+
+<script id="pulpo-v110-offline-png-fix">
+(function(){
+  function px(value, fallback){
+    const n = parseFloat(String(value || '').replace('px',''));
+    return Number.isFinite(n) ? n : fallback;
+  }
+  function safeText(value){ return String(value || '').replace(/\s+/g,' ').trim(); }
+  function roundedRect(ctx, x, y, w, h, r){
+    r = Math.max(0, Math.min(r || 0, Math.min(w,h)/2));
+    ctx.beginPath();
+    ctx.moveTo(x+r, y);
+    ctx.arcTo(x+w, y, x+w, y+h, r);
+    ctx.arcTo(x+w, y+h, x, y+h, r);
+    ctx.arcTo(x, y+h, x, y, r);
+    ctx.arcTo(x, y, x+w, y, r);
+    ctx.closePath();
+  }
+  function wrapText(ctx, text, x, y, maxWidth, lineHeight, maxLines){
+    const words = safeText(text).split(' ').filter(Boolean);
+    let line = '';
+    let lines = 0;
+    for (let i=0; i<words.length; i++){
+      const test = line ? line + ' ' + words[i] : words[i];
+      if (ctx.measureText(test).width > maxWidth && line){
+        ctx.fillText(line, x, y);
+        y += lineHeight;
+        lines++;
+        line = words[i];
+        if (maxLines && lines >= maxLines) return y;
+      } else {
+        line = test;
+      }
+    }
+    if (line && (!maxLines || lines < maxLines)) ctx.fillText(line, x, y);
+    return y + lineHeight;
+  }
+  function nodeKindLabel(nodeEl){
+    const ds = nodeEl.dataset || {};
+    const cls = Array.from(nodeEl.classList || []).find(c => c.startsWith('kind-'));
+    return ds.kind || (cls ? cls.replace('kind-','') : 'outil');
+  }
+  function drawNode(ctx, el, x, y, w, h){
+    const styles = getComputedStyle(el);
+    const border = styles.borderColor && styles.borderColor !== 'rgba(0, 0, 0, 0)' ? styles.borderColor : '#cbd5e1';
+    roundedRect(ctx, x, y, w, h, 16);
+    ctx.fillStyle = '#ffffff';
+    ctx.fill();
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = border;
+    ctx.stroke();
+
+    const headerH = Math.min(42, Math.max(30, h * 0.32));
+    ctx.save();
+    roundedRect(ctx, x+1, y+1, w-2, headerH, 14);
+    ctx.clip();
+    ctx.fillStyle = '#f3f6fb';
+    ctx.fillRect(x+1, y+1, w-2, headerH);
+    ctx.restore();
+    ctx.strokeStyle = '#e2e8f0';
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(x, y+headerH); ctx.lineTo(x+w, y+headerH); ctx.stroke();
+
+    const title = safeText(el.querySelector('.node-title')?.textContent || el.querySelector('.node-header')?.textContent || el.getAttribute('title') || nodeKindLabel(el));
+    ctx.fillStyle = '#102344';
+    ctx.font = '700 14px Inter, Arial, sans-serif';
+    wrapText(ctx, title, x+12, y+24, w-24, 16, 1);
+
+    let content = safeText(el.querySelector('.node-body')?.textContent || el.querySelector('.node-content')?.textContent || el.textContent || '');
+    if (content.startsWith(title)) content = content.slice(title.length).trim();
+    content = content.slice(0, 220);
+    ctx.fillStyle = '#475569';
+    ctx.font = '12px Inter, Arial, sans-serif';
+    wrapText(ctx, content, x+12, y+headerH+22, w-24, 15, Math.max(2, Math.floor((h-headerH-20)/15)));
+  }
+  function drawGroups(ctx, root, ref){
+    root.querySelectorAll('.group-box').forEach(el => {
+      const r = el.getBoundingClientRect();
+      const x = r.left - ref.left, y = r.top - ref.top, w = r.width, h = r.height;
+      if (w < 5 || h < 5) return;
+      ctx.save();
+      ctx.globalAlpha = 0.95;
+      roundedRect(ctx, x, y, w, h, 18);
+      ctx.fillStyle = 'rgba(16,35,68,0.05)'; ctx.fill();
+      ctx.strokeStyle = '#102344'; ctx.lineWidth = 2; ctx.setLineDash([7,5]); ctx.stroke(); ctx.setLineDash([]);
+      const label = safeText(el.querySelector('.group-title')?.textContent || el.textContent || 'Groupe');
+      ctx.fillStyle = '#102344'; ctx.font = '700 13px Inter, Arial, sans-serif';
+      ctx.fillText(label, x+14, y+22);
+      ctx.restore();
+    });
+  }
+  function drawSvgConnections(ctx, root, ref){
+    root.querySelectorAll('svg').forEach(svg => {
+      const vb = (svg.getAttribute('viewBox') || '').trim().split(/\s+/).map(Number);
+      const rect = svg.getBoundingClientRect();
+      const sx = vb.length === 4 && vb[2] ? rect.width / vb[2] : 1;
+      const sy = vb.length === 4 && vb[3] ? rect.height / vb[3] : 1;
+      const ox = rect.left - ref.left - (vb[0] || 0) * sx;
+      const oy = rect.top - ref.top - (vb[1] || 0) * sy;
+      svg.querySelectorAll('path').forEach(path => {
+        const d = path.getAttribute('d');
+        if (!d || typeof Path2D === 'undefined') return;
+        try{
+          ctx.save();
+          ctx.translate(ox, oy);
+          ctx.scale(sx, sy);
+          const p = new Path2D(d);
+          ctx.strokeStyle = path.getAttribute('stroke') || getComputedStyle(path).stroke || '#102344';
+          ctx.lineWidth = Number(path.getAttribute('stroke-width')) || 3;
+          ctx.lineCap = 'round';
+          ctx.lineJoin = 'round';
+          if (path.classList.contains('preview')) ctx.setLineDash([8,6]);
+          ctx.stroke(p);
+          ctx.restore();
+        }catch(e){ ctx.restore?.(); }
+      });
+    });
+  }
+  function drawDomNodes(ctx, root, ref){
+    root.querySelectorAll('.node').forEach(el => {
+      const r = el.getBoundingClientRect();
+      const x = r.left - ref.left, y = r.top - ref.top, w = r.width, h = r.height;
+      if (w < 10 || h < 10) return;
+      drawNode(ctx, el, x, y, w, h);
+    });
+  }
+  function drawEmptyState(ctx, w, h){
+    ctx.fillStyle = '#102344';
+    ctx.font = '700 20px Inter, Arial, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('Pulpo', w/2, h/2 - 12);
+    ctx.fillStyle = '#64748b';
+    ctx.font = '14px Inter, Arial, sans-serif';
+    ctx.fillText('Aucun contenu visible à exporter.', w/2, h/2 + 16);
+    ctx.textAlign = 'left';
+  }
+  function pulpoCanvasDomCapture(element, options){
+    const rect = element.getBoundingClientRect();
+    const scale = Math.max(1, Number(options.scale || 1));
+    const width = Math.max(1, Math.ceil(rect.width || element.scrollWidth || 1200));
+    const height = Math.max(1, Math.ceil(rect.height || element.scrollHeight || 800));
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.ceil(width * scale);
+    canvas.height = Math.ceil(height * scale);
+    const ctx = canvas.getContext('2d');
+    ctx.scale(scale, scale);
+    ctx.fillStyle = options.backgroundColor || '#ffffff';
+    ctx.fillRect(0,0,width,height);
+
+    // Light grid when capturing the workspace viewport.
+    if (element.classList?.contains('workspace')){
+      ctx.strokeStyle = '#e5eaf2'; ctx.lineWidth = 1;
+      for (let x=0; x<width; x+=24){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,height); ctx.stroke(); }
+      for (let y=0; y<height; y+=24){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(width,y); ctx.stroke(); }
+    }
+    const ref = rect;
+    drawGroups(ctx, element, ref);
+    drawSvgConnections(ctx, element, ref);
+    drawDomNodes(ctx, element, ref);
+    if (!element.querySelector('.node')) drawEmptyState(ctx, width, height);
+    return canvas;
+  }
+  async function pulpoOfflineHtmlCaptureV2(element, options = {}){
+    if (!element) throw new Error('Aucun élément à capturer.');
+    // Use the robust canvas renderer first. It avoids browser-specific SVG foreignObject failures.
+    return pulpoCanvasDomCapture(element, options || {});
+  }
+  window.pulpoOfflineHtmlCaptureV2 = pulpoOfflineHtmlCaptureV2;
+  window.html2canvas = pulpoOfflineHtmlCaptureV2;
+})();
+</script>
+
 </body>
 </html>
 <!-- V93 - Onglets bas + boutons homogènes -->
